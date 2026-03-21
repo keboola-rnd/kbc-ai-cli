@@ -2,39 +2,71 @@
 
 CLI for managing Keboola Data Apps from the terminal. Designed for developers, DevOps, and AI agents.
 
+## Installation
+
+### One-line install (Linux / macOS)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/keboola-rnd/kbc-ai-cli/main/install.sh | bash
+```
+
+Auto-detects OS and architecture, downloads the correct binary to `/usr/local/bin/kbc-app`.
+
+### Manual download
+
+Download the binary for your platform from [GitHub Releases](https://github.com/keboola-rnd/kbc-ai-cli/releases/latest):
+
+```bash
+# Linux x64
+curl -fsSL https://github.com/keboola-rnd/kbc-ai-cli/releases/latest/download/kbc-app-linux-x64 -o /usr/local/bin/kbc-app && chmod +x /usr/local/bin/kbc-app
+
+# Linux ARM64
+curl -fsSL https://github.com/keboola-rnd/kbc-ai-cli/releases/latest/download/kbc-app-linux-arm64 -o /usr/local/bin/kbc-app && chmod +x /usr/local/bin/kbc-app
+
+# macOS Intel
+curl -fsSL https://github.com/keboola-rnd/kbc-ai-cli/releases/latest/download/kbc-app-darwin-x64 -o /usr/local/bin/kbc-app && chmod +x /usr/local/bin/kbc-app
+
+# macOS Apple Silicon
+curl -fsSL https://github.com/keboola-rnd/kbc-ai-cli/releases/latest/download/kbc-app-darwin-arm64 -o /usr/local/bin/kbc-app && chmod +x /usr/local/bin/kbc-app
+
+# Windows x64 — download kbc-app-windows-x64.exe from Releases
+```
+
+### From source (requires [Bun](https://bun.sh/))
+
+```bash
+git clone https://github.com/keboola-rnd/kbc-ai-cli.git
+cd kbc-ai-cli
+bun install
+bun run src/cli.ts --help
+```
+
 ## Quick Start
 
 ```bash
-# Install dependencies
-bun install
-
 # Authenticate
-bun run dev -- auth login --stack https://connection.keboola.com --token YOUR_TOKEN
+kbc-app auth login --stack https://connection.keboola.com --token YOUR_TOKEN
 
 # List apps
-bun run dev -- app list
+kbc-app app list
 
-# Set current app context
-bun run dev -- use <app-id>
+# Set current app context (no need to pass app-id every time)
+kbc-app use <app-id>
 
-# Deploy
-bun run dev -- app deploy --wait
+# Deploy and follow logs
+kbc-app app deploy --follow
 
 # Stream logs
-bun run dev -- app logs --follow
+kbc-app app logs --follow
 ```
 
-## Build
+For AI agents and CI/CD, use env vars instead of interactive login:
 
 ```bash
-# Build for current platform
-bun run build
-
-# Build for all platforms
-bun run build:all
-
-# Run compiled binary
-./dist/kbc-app app list
+export KBC_APP_STACK_URL=https://connection.keboola.com
+export KBC_APP_TOKEN=xxx
+export KBC_APP_ID=12345
+kbc-app app deploy --wait
 ```
 
 ## Environment Variables
@@ -123,6 +155,19 @@ kbc-app api data-science PATCH /apps/<id> --data '{"desiredState":"stopped"}'
 2. Environment variables: `KBC_APP_STACK_URL` and `KBC_APP_TOKEN`
 3. Config file: `~/.config/kbc-app/config.json`
 
+## Build
+
+```bash
+# Build for current platform
+bun run build
+
+# Build for all platforms
+bun run build:all
+
+# Run compiled binary
+./dist/kbc-app --help
+```
+
 ## Architecture
 
 - **Runtime**: [Bun](https://bun.sh/) — fast JS runtime with native TypeScript support
@@ -131,6 +176,14 @@ kbc-app api data-science PATCH /apps/<id> --data '{"desiredState":"stopped"}'
 - **Config Storage**: `~/.config/kbc-app/config.json`
 
 All commands support `--json` flag for machine-readable output, making it ideal for AI agent consumption.
+
+## AI Agent Skills
+
+This CLI is designed to be used by AI agents for Data App development and management. For comprehensive agent skills and deployment guides, see the [Keboola AI Kit](https://github.com/keboola/ai-kit/tree/main/plugins/dataapp-developer):
+
+- **[Data App Deployment Skill](https://github.com/keboola/ai-kit/blob/main/plugins/dataapp-developer/skills/dataapp-deployment/SKILL.md)** — Complete guide for deploying web apps (Node.js, Python, Streamlit) to Keboola Data Apps. Covers the Docker architecture (`keboola/data-app-python-js` base image), Nginx/Supervisord configuration, secrets-to-env-var mapping, SSE/WebSocket streaming setup, Python dependency management with `uv`, and common error troubleshooting (PEP 668, POST to root, buffered streams).
+
+- **[Data App Development Skill](https://github.com/keboola/ai-kit/blob/main/plugins/dataapp-developer/skills/dataapp-dev/SKILL.md)** — Expert guide for developing Streamlit data apps for Keboola. Covers the validate-build-verify workflow, SQL-first architecture patterns, data validation with Keboola MCP, visual verification with Playwright, and session state management.
 
 ## Development
 
@@ -141,3 +194,14 @@ bun run src/cli.ts app list
 # With env vars
 KBC_APP_STACK_URL=https://connection.keboola.com KBC_APP_TOKEN=xxx bun run src/cli.ts app list
 ```
+
+## Release
+
+To create a new release:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+GitHub Actions automatically builds binaries for all platforms and publishes them as a [GitHub Release](https://github.com/keboola-rnd/kbc-ai-cli/releases).
