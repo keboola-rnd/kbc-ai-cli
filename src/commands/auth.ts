@@ -25,8 +25,9 @@ export function registerAuth(program: Command): void {
           token: opts.token,
         });
 
+        const userName = tokenInfo.admin?.name ?? tokenInfo.creatorToken?.description ?? tokenInfo.description;
         printSuccess(
-          `Authenticated as "${tokenInfo.admin.name}" in project "${tokenInfo.owner.name}" (profile: ${opts.profile})`,
+          `Authenticated as "${userName}" in project "${tokenInfo.owner.name}" (profile: ${opts.profile})`,
         );
       } catch (error) {
         printError(`Authentication failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -43,9 +44,10 @@ export function registerAuth(program: Command): void {
         const ctx = CliContext.fromEnvOrConfig();
         const tokenInfo = await ctx.verifyToken();
 
+        const userName = tokenInfo.admin?.name ?? tokenInfo.creatorToken?.description ?? tokenInfo.description;
         const data = {
           stack: ctx.stackUrl,
-          user: tokenInfo.admin.name,
+          user: userName,
           project: tokenInfo.owner.name,
           projectId: tokenInfo.owner.id,
           tokenId: tokenInfo.id,
@@ -98,8 +100,9 @@ export function registerAuth(program: Command): void {
             stackUrl: opts.stack,
             token: opts.token,
           });
+          const userName = tokenInfo.admin?.name ?? tokenInfo.creatorToken?.description ?? tokenInfo.description;
           printSuccess(
-            `Authenticated as "${tokenInfo.admin.name}" in project "${tokenInfo.owner.name}"`,
+            `Authenticated as "${userName}" in project "${tokenInfo.owner.name}"`,
           );
         } catch (error) {
           printError(`Authentication failed: ${error instanceof Error ? error.message : String(error)}`);

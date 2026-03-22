@@ -122,12 +122,16 @@ export type StorageToken = {
   owner: {
     id: number;
     name: string;
-    defaultBackend: string;
-    features: string[];
+    defaultBackend?: string;
+    features?: string[];
   };
-  admin: {
+  admin?: {
     id: number;
     name: string;
     role: string;
+  };
+  creatorToken?: {
+    id: number;
+    description: string;
   };
 };
