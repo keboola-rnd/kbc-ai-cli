@@ -11,38 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: cli
-
-      - uses: actions/checkout@v4
-        with:
-          repository: keboola/ui
-          path: ui
-          sparse-checkout: packages/api-client
-          sparse-checkout-cone-mode: false
 
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.3.11'
 
       - name: Install dependencies
-        working-directory: cli
         run: bun install
 
       - name: Typecheck
-        working-directory: cli
         run: bun run typecheck
 
-      - name: Check drift (registry vs api-client source)
-        working-directory: cli
-        run: bun run generator/generate.ts --verify-only
-
       - name: Check workflow contracts
-        working-directory: cli
         run: bun run generator/check-workflows.ts
 
+      - name: Verify generated code is up-to-date
+        run: |
+          bun run generator/generate.ts
+          if [ -n "$(git diff --name-only src/generated/)" ]; then
+            echo "ERROR: Generated files are out of date. Run 'make generate' and commit."
+            git diff src/generated/
+            exit 1
+          fi
+          echo "Generated files are up-to-date."
+
       - name: Test CLI loads
-        working-directory: cli
         run: bun run src/cli.ts --help
 
   build:
