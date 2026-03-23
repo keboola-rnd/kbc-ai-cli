@@ -14,7 +14,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api.getVariables({ configId: opts['config-id'] });
+        const result = await api._call('getVariables', 'GET', { configId: opts['config-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -27,7 +27,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
     .action(async (branchId, opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api.getVariablesByBranchId(branchId);
+        const result = await api._call('getVariablesByBranchId', 'GET', branchId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -40,7 +40,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api.getProjectWideVariables();
+        const result = await api._call('getProjectWideVariables', 'GET');
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -55,7 +55,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.vaultApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.createVariable(bodyData);
+        const result = await api._call('createVariable', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -68,7 +68,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
     .action(async (hash, opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api.deleteVariable(hash);
+        const result = await api._call('deleteVariable', 'DELETE', hash);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

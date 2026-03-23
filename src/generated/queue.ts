@@ -13,7 +13,7 @@ export function registerQueueCommands(parent: Command, ctx: CliContext) {
     .action(async (jobId, opts) => {
       try {
         const api: any = await ctx.queueApi();
-        const result = await api.getJob(jobId);
+        const result = await api._call('getJob', 'GET', jobId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -31,7 +31,7 @@ export function registerQueueCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.queueApi();
-        const result = await api.searchJobs({ status: opts['status'], component: opts['component'], config: opts['config'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
+        const result = await api._call('searchJobs', 'GET', { status: opts['status'], component: opts['component'], config: opts['config'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

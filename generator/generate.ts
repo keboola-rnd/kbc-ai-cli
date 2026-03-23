@@ -237,7 +237,9 @@ function generateCommand(
 
   const { preamble, callArgs } = buildCallArgs(method);
   if (preamble) lines.push(preamble.trimEnd());
-  lines.push(`        const result = await api.${method.name}(${callArgs});`);
+  const httpMethod = method.httpMethod ?? 'GET';
+  const callArgStr = callArgs ? `, ${callArgs}` : '';
+  lines.push(`        const result = await api._call('${method.name}', '${httpMethod}'${callArgStr});`);
   lines.push(`        ctx.output(result);`);
   lines.push(`      } catch (error: unknown) {`);
   lines.push(`        ctx.handleError(error);`);
@@ -306,6 +308,7 @@ function generateRegistryFile(): string {
   lines.push('');
   return lines.join('\n');
 }
+
 
 function generateIndexFile(): string {
   const lines: string[] = [HEADER];

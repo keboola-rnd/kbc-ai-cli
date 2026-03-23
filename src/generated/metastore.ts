@@ -13,7 +13,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.metastoreApi();
-        const result = await api.healthCheck();
+        const result = await api._call('healthCheck', 'GET');
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -28,7 +28,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.getMetaObjects(objectType);
+        const result = await api._call('getMetaObjects', 'GET', objectType);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -41,7 +41,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, uuid, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.getMetaObject(objectType, uuid);
+        const result = await api._call('getMetaObject', 'GET', objectType, uuid);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -56,7 +56,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.createMetaObject(objectType, bodyData);
+        const result = await api._call('createMetaObject', 'POST', objectType, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -71,7 +71,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.updateMetaObject(objectType, uuid, bodyData);
+        const result = await api._call('updateMetaObject', 'PATCH', objectType, uuid, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -86,7 +86,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.replaceMetaObject(objectType, uuid, bodyData);
+        const result = await api._call('replaceMetaObject', 'PUT', objectType, uuid, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -99,7 +99,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, uuid, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.deleteMetaObject(objectType, uuid);
+        const result = await api._call('deleteMetaObject', 'DELETE', objectType, uuid);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -112,7 +112,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.getMetaObjectRevisions(objectType);
+        const result = await api._call('getMetaObjectRevisions', 'GET', objectType);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -125,7 +125,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, uuid, revision, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.getMetaObjectRevision(objectType, uuid, revision);
+        const result = await api._call('getMetaObjectRevision', 'GET', objectType, uuid, revision);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -138,7 +138,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, uuid, revision, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).repository;
-        const result = await api.deleteMetaObjectRevision(objectType, uuid, revision);
+        const result = await api._call('deleteMetaObjectRevision', 'DELETE', objectType, uuid, revision);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -153,7 +153,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).schema;
-        const result = await api.getSchema(objectType);
+        const result = await api._call('getSchema', 'GET', objectType);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -166,7 +166,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
     .action(async (objectType, version, opts) => {
       try {
         const api: any = (await ctx.metastoreApi()).schema;
-        const result = await api.getVersionedSchema(objectType, version);
+        const result = await api._call('getVersionedSchema', 'GET', objectType, version);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

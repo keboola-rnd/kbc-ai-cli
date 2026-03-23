@@ -49,15 +49,33 @@ async function apiFetch<T>(url: string, options: FetchOptions = {}): Promise<T> 
 
 // ── Service Proxy Infrastructure ────────────────────────────────────
 // Used by generated atomic commands to make HTTP calls via method name mapping.
+//
+// Generated commands call:  api._call('methodName', 'POST', arg1, arg2, ...)
+// Sub-group commands call:  (await ctx.managementApi()).projects._call('getProject', 'GET', id)
+//
+// The _call() pattern passes the HTTP method explicitly, avoiding misclassification.
 
 function createServiceProxy(
   baseUrl: string,
   token: string,
+  subGroupNames?: string[],
 ): Record<string, unknown> {
   return new Proxy({} as Record<string, unknown>, {
     get(_target, prop: string) {
+      // _call(methodName, httpMethod, ...args) — explicit HTTP method call
+      if (prop === '_call') {
+        return (methodName: string, httpMethod: string, ...args: unknown[]) => {
+          return genericApiCall(baseUrl, token, '', methodName, httpMethod, args);
+        };
+      }
+      // Sub-group access: return a nested proxy with its own _call
+      if (subGroupNames && subGroupNames.includes(prop)) {
+        return createServiceProxy(baseUrl, token);
+      }
+      // Legacy fallback: direct method call (used by hand-written commands)
       return (...args: unknown[]) => {
-        return genericApiCall(baseUrl, token, '', prop, args);
+        const httpMethod = inferHttpMethod(prop);
+        return genericApiCall(baseUrl, token, '', prop, httpMethod, args);
       };
     },
   });
@@ -87,9 +105,8 @@ function inferHttpMethod(methodName: string): string {
   return 'GET';
 }
 
-function isWriteMethod(methodName: string): boolean {
-  const m = inferHttpMethod(methodName);
-  return m === 'POST' || m === 'PATCH' || m === 'PUT';
+function isWriteMethod(httpMethod: string): boolean {
+  return httpMethod === 'POST' || httpMethod === 'PATCH' || httpMethod === 'PUT';
 }
 
 async function genericApiCall(
@@ -97,11 +114,11 @@ async function genericApiCall(
   token: string,
   pathPrefix: string,
   methodName: string,
+  httpMethod: string,
   args: unknown[],
 ): Promise<unknown> {
   const headers: Record<string, string> = { [STORAGE_API_TOKEN_HEADER]: token };
-  const httpMethod = inferHttpMethod(methodName);
-  const pathAndBody = buildPathFromMethod(methodName, args, pathPrefix);
+  const pathAndBody = buildPathFromMethod(methodName, httpMethod, args, pathPrefix);
 
   const fullUrl = pathAndBody.query
     ? baseUrl + pathAndBody.path + '?' + pathAndBody.query
@@ -262,6 +279,7 @@ const METHOD_MAPPINGS: Record<string, { template: string; idCount: number }> = {
 
 function buildPathFromMethod(
   methodName: string,
+  httpMethod: string,
   args: unknown[],
   basePath: string,
 ): { path: string; body?: string; query?: string } {
@@ -293,7 +311,7 @@ function buildPathFromMethod(
   }
 
   let bodyStr: string | undefined;
-  if (isWriteMethod(methodName)) {
+  if (isWriteMethod(httpMethod)) {
     const bodyArg = args[idCount];
     if (bodyArg && typeof bodyArg === 'object') {
       bodyStr = JSON.stringify(bodyArg);
@@ -301,7 +319,7 @@ function buildPathFromMethod(
   }
 
   let queryString: string | undefined;
-  if (!isWriteMethod(methodName) && inferHttpMethod(methodName) !== 'DELETE') {
+  if (!isWriteMethod(httpMethod) && httpMethod !== 'DELETE') {
     const queryArg = args[idCount];
     if (queryArg && typeof queryArg === 'object') {
       const params = new URLSearchParams();
@@ -405,21 +423,10 @@ export class CliContext {
 
   storageApi(): Record<string, unknown> {
     const baseUrl = this.stackUrl + '/v2/storage';
-    const token = this.token;
-    return new Proxy({} as Record<string, unknown>, {
-      get(_target, prop: string) {
-        const subGroups = [
-          'tables', 'buckets', 'componentsAndConfigurations', 'branches',
-          'files', 'jobs', 'tokens', 'workspaces', 'mergeRequests',
-        ];
-        if (subGroups.includes(prop)) {
-          return createServiceProxy(baseUrl, token);
-        }
-        return (...args: unknown[]) => {
-          return genericApiCall(baseUrl, token, '', prop, args);
-        };
-      },
-    });
+    return createServiceProxy(baseUrl, this.token, [
+      'tables', 'buckets', 'componentsAndConfigurations', 'branches',
+      'files', 'jobs', 'tokens', 'workspaces', 'mergeRequests',
+    ]);
   }
 
   async vaultApi(): Promise<Record<string, unknown>> {
@@ -429,7 +436,7 @@ export class CliContext {
 
   async managementApi(): Promise<Record<string, unknown>> {
     const url = await this.getServiceUrl('manage');
-    return createServiceProxy(url, this.token);
+    return createServiceProxy(url, this.token, ['projects', 'features', 'users']);
   }
 
   async queueApi(): Promise<Record<string, unknown>> {
@@ -469,12 +476,12 @@ export class CliContext {
 
   async metastoreApi(): Promise<Record<string, unknown>> {
     const url = await this.getServiceUrl('metastore');
-    return createServiceProxy(url, this.token);
+    return createServiceProxy(url, this.token, ['repository', 'schema']);
   }
 
   async syncActionsApi(): Promise<Record<string, unknown>> {
     const url = await this.getServiceUrl('sync-actions');
-    return createServiceProxy(url, this.token);
+    return createServiceProxy(url, this.token, ['gitRepository']);
   }
 
   async statusApi(): Promise<Record<string, unknown>> {

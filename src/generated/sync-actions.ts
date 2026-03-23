@@ -15,7 +15,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.syncActionsApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.enrollMFA(bodyData);
+        const result = await api._call('enrollMFA', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -32,7 +32,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.syncActionsApi()).gitRepository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.getDataAppPublicGitRepository(bodyData);
+        const result = await api._call('getDataAppPublicGitRepository', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -47,7 +47,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.syncActionsApi()).gitRepository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.getDataAppPasswordPrivateGitRepository(bodyData);
+        const result = await api._call('getDataAppPasswordPrivateGitRepository', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -62,7 +62,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.syncActionsApi()).gitRepository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.getDataAppSSHKeyPrivateGitRepository(bodyData);
+        const result = await api._call('getDataAppSSHKeyPrivateGitRepository', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -77,7 +77,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.syncActionsApi()).gitRepository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.getPublicGitRepository(bodyData);
+        const result = await api._call('getPublicGitRepository', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -92,7 +92,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = (await ctx.syncActionsApi()).gitRepository;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.getPrivateGitRepository(bodyData);
+        const result = await api._call('getPrivateGitRepository', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

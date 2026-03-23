@@ -15,7 +15,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.describeConfigurationVersion(bodyData);
+        const result = await api._call('describeConfigurationVersion', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -30,7 +30,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.describeConfigurationMerge(bodyData);
+        const result = await api._call('describeConfigurationMerge', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -45,7 +45,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.explainError(bodyData);
+        const result = await api._call('explainError', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -60,7 +60,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.describeConfiguration(bodyData);
+        const result = await api._call('describeConfiguration', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -75,7 +75,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.suggestComponent(bodyData);
+        const result = await api._call('suggestComponent', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -90,7 +90,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.aiApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api.feedback(bodyData);
+        const result = await api._call('feedback', 'POST', bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
