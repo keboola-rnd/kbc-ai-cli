@@ -179,10 +179,20 @@ function buildPathFromMethod(
   }
 
   let bodyStr: string | undefined;
-  if (isWriteMethod(httpMethod)) {
+  // POST/PATCH/PUT and DELETE-with-body all need body serialization
+  if (isWriteMethod(httpMethod) || httpMethod === 'DELETE') {
     const bodyArg = args[idCount];
     if (bodyArg && typeof bodyArg === 'object') {
       bodyStr = JSON.stringify(bodyArg);
+    } else if (bodyArg && typeof bodyArg === 'string' && isWriteMethod(httpMethod)) {
+      // Non-ID positional string arg (e.g. encrypt <value>) — check if next arg is options
+      const nextArg = args.length > idCount + 1 ? args[idCount + 1] : undefined;
+      if (nextArg && typeof nextArg === 'object') {
+        // Merge the string arg into the options object as the body
+        bodyStr = JSON.stringify({ value: bodyArg, ...(nextArg as Record<string, unknown>) });
+      } else {
+        bodyStr = JSON.stringify(bodyArg);
+      }
     }
   }
 
