@@ -1,0 +1,97 @@
+{
+  "$schema": "./contracts-schema.json",
+  "description": "Workflow contracts — maps logical workflow commands to the atomic methods they depend on.",
+  "workflows": {
+    "data-app": {
+      "description": "Data App management workflows",
+      "commands": {
+        "deploy": {
+          "description": "Deploy a Data App (update config + patch app + follow logs)",
+          "atomicDeps": [
+            "storage.componentsAndConfigurations.getConfiguration",
+            "data-science.getApp",
+            "data-science.patchApp",
+            "data-science.getAppLogsTail"
+          ]
+        },
+        "logs": {
+          "description": "Stream or download Data App logs",
+          "atomicDeps": [
+            "data-science.getApp",
+            "data-science.getAppLogsTail",
+            "data-science.getAppLogsDownload"
+          ]
+        },
+        "status": {
+          "description": "Show Data App status and info",
+          "atomicDeps": [
+            "data-science.getApp",
+            "storage.componentsAndConfigurations.getConfiguration"
+          ]
+        },
+        "list": {
+          "description": "List all Data Apps in the project",
+          "atomicDeps": [
+            "data-science.getApps"
+          ]
+        },
+        "stop": {
+          "description": "Stop a running Data App",
+          "atomicDeps": [
+            "data-science.getApp",
+            "data-science.patchApp"
+          ]
+        },
+        "start": {
+          "description": "Start a stopped Data App",
+          "atomicDeps": [
+            "data-science.getApp",
+            "data-science.patchApp"
+          ]
+        },
+        "restart": {
+          "description": "Restart a Data App (stop + start)",
+          "atomicDeps": [
+            "data-science.getApp",
+            "data-science.patchApp"
+          ]
+        },
+        "open": {
+          "description": "Open Data App URL in browser",
+          "atomicDeps": [
+            "data-science.getApp"
+          ]
+        },
+        "config": {
+          "description": "Show or update Data App configuration",
+          "atomicDeps": [
+            "data-science.getApp",
+            "storage.componentsAndConfigurations.getConfiguration"
+          ]
+        },
+        "secret-add": {
+          "description": "Add or update a secret/variable for a Data App",
+          "atomicDeps": [
+            "data-science.getApp",
+            "storage.componentsAndConfigurations.getConfiguration",
+            "encryption.encrypt"
+          ]
+        },
+        "secrets-import": {
+          "description": "Import secrets from .env file",
+          "atomicDeps": [
+            "data-science.getApp",
+            "storage.componentsAndConfigurations.getConfiguration",
+            "encryption.encrypt"
+          ]
+        },
+        "delete": {
+          "description": "Delete a Data App",
+          "atomicDeps": [
+            "data-science.deleteApp"
+          ]
+        }
+      }
+    }
+  }
+}

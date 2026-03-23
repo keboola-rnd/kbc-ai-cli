@@ -20,7 +20,7 @@ export function registerSecretsDelete(parent: Command): void {
         const resolvedAppId = ctx.resolveAppId(appId);
 
         const app = await ctx.getApp(resolvedAppId);
-        const config = await ctx.getConfiguration(app.configId);
+        const config = await ctx.getConfigurationLegacy(app.configId);
         const currentConfig = config.configuration ?? {};
         const currentParams = currentConfig.parameters ?? {};
         const currentDataApp = currentParams.dataApp ?? {};

@@ -34,7 +34,7 @@ export function registerAppDeploy(parent: Command): void {
         // If size or timeout flags, update configuration first
         if (opts.size || opts.timeout) {
           printInfo('Updating configuration...');
-          const config = await ctx.getConfiguration(app.configId);
+          const config = await ctx.getConfigurationLegacy(app.configId);
           const currentConfig = config.configuration ?? {};
           const currentParams = currentConfig.parameters ?? {};
 

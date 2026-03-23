@@ -16,7 +16,7 @@ export function registerConfigShow(parent: Command): void {
 
         // Get app to find configId
         const app = await ctx.getApp(resolvedAppId);
-        const config = await ctx.getConfiguration(app.configId);
+        const config = await ctx.getConfigurationLegacy(app.configId);
 
         // Config show always outputs JSON for machine readability
         console.log(JSON.stringify(config.configuration, null, 2));
