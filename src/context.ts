@@ -62,10 +62,11 @@ function createServiceProxy(
 ): Record<string, unknown> {
   return new Proxy({} as Record<string, unknown>, {
     get(_target, prop: string) {
-      // _call(methodName, httpMethod, ...args) — explicit HTTP method call
+      // _call(methodName, httpMethod, urlTemplate, idCount, ...args)
+      // Generated commands pass URL template + idCount explicitly.
       if (prop === '_call') {
-        return (methodName: string, httpMethod: string, ...args: unknown[]) => {
-          return genericApiCall(baseUrl, token, '', methodName, httpMethod, args);
+        return (methodName: string, httpMethod: string, urlTemplate: string, idCount: number, ...args: unknown[]) => {
+          return genericApiCall(baseUrl, token, methodName, httpMethod, urlTemplate, idCount, args);
         };
       }
       // Sub-group access: return a nested proxy with its own _call
@@ -75,7 +76,8 @@ function createServiceProxy(
       // Legacy fallback: direct method call (used by hand-written commands)
       return (...args: unknown[]) => {
         const httpMethod = inferHttpMethod(prop);
-        return genericApiCall(baseUrl, token, '', prop, httpMethod, args);
+        // Legacy calls don't have urlTemplate — use empty string and 0 idCount for fallback
+        return genericApiCall(baseUrl, token, prop, httpMethod, '', 0, args);
       };
     },
   });
@@ -112,13 +114,14 @@ function isWriteMethod(httpMethod: string): boolean {
 async function genericApiCall(
   baseUrl: string,
   token: string,
-  pathPrefix: string,
   methodName: string,
   httpMethod: string,
+  urlTemplate: string,
+  idCount: number,
   args: unknown[],
 ): Promise<unknown> {
   const headers: Record<string, string> = { [STORAGE_API_TOKEN_HEADER]: token };
-  const pathAndBody = buildPathFromMethod(methodName, httpMethod, args, pathPrefix);
+  const pathAndBody = buildPathFromMethod(methodName, httpMethod, urlTemplate, idCount, args);
 
   const fullUrl = pathAndBody.query
     ? baseUrl + pathAndBody.path + '?' + pathAndBody.query
@@ -131,183 +134,48 @@ async function genericApiCall(
   });
 }
 
-/** Method-to-REST-path mapping table */
-const METHOD_MAPPINGS: Record<string, { template: string; idCount: number }> = {
-  // Data Science
-  getApps: { template: '/apps', idCount: 0 },
-  getApp: { template: '/apps/{0}', idCount: 1 },
-  createApp: { template: '/apps', idCount: 0 },
-  patchApp: { template: '/apps/{0}', idCount: 1 },
-  deleteApp: { template: '/apps/{0}', idCount: 1 },
-  getAppPassword: { template: '/apps/{0}/password', idCount: 1 },
-  resetAppPassword: { template: '/apps/{0}/reset-password', idCount: 1 },
-  getAppRuns: { template: '/apps/{0}/runs', idCount: 1 },
-  getAppRun: { template: '/apps/{0}/runs/{1}', idCount: 2 },
-  getAppLogsTail: { template: '/apps/{0}/logs/tail', idCount: 1 },
-  getAppLogsDownload: { template: '/apps/{0}/logs/download', idCount: 1 },
-  getRuntimes: { template: '/runtimes', idCount: 0 },
-  // Storage direct
-  getStackInfo: { template: '', idCount: 0 },
-  // Storage tables
-  getTables: { template: '/branch/default/tables', idCount: 0 },
-  getTable: { template: '/branch/default/tables/{0}', idCount: 1 },
-  getDataPreview: { template: '/branch/default/tables/{0}/data-preview', idCount: 1 },
-  deleteTableRows: { template: '/branch/default/tables/{0}/rows', idCount: 1 },
-  // Storage buckets
-  getBuckets: { template: '/branch/default/buckets', idCount: 0 },
-  getBucket: { template: '/branch/default/buckets/{0}', idCount: 1 },
-  createBucket: { template: '/branch/default/buckets', idCount: 0 },
-  updateBucket: { template: '/branch/default/buckets/{0}', idCount: 1 },
-  deleteBucket: { template: '/branch/default/buckets/{0}', idCount: 1 },
-  createScheduledRefresh: { template: '/branch/default/buckets/scheduled-refresh', idCount: 0 },
-  deleteScheduledTask: { template: '/branch/default/buckets/scheduled-tasks/{0}', idCount: 1 },
-  // Storage configs
-  getComponents: { template: '/branch/{branchId}/components', idCount: 0 },
-  getComponent: { template: '/branch/{branchId}/components/{0}', idCount: 1 },
-  getConfigurations: { template: '/branch/{branchId}/components/{0}/configs', idCount: 1 },
-  getConfiguration: { template: '/branch/{branchId}/components/{0}/configs/{1}', idCount: 2 },
-  createConfiguration: { template: '/branch/{branchId}/components/{0}/configs', idCount: 1 },
-  deleteConfiguration: { template: '/branch/{branchId}/components/{0}/configs/{1}', idCount: 2 },
-  searchComponentConfigurations: { template: '/branch/{branchId}/search/component-configurations', idCount: 0 },
-  getConfigurationWorkspaces: { template: '/branch/{branchId}/components/{0}/configs/{1}/workspaces', idCount: 2 },
-  createConfigurationWorkspace: { template: '/branch/{branchId}/components/{0}/configs/{1}/workspaces', idCount: 2 },
-  createConfigurationRow: { template: '/branch/{branchId}/components/{0}/configs/{1}/rows', idCount: 2 },
-  deleteConfigurationRow: { template: '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', idCount: 3 },
-  // Storage branches
-  getBranches: { template: '/branch', idCount: 0 },
-  getBranch: { template: '/branch/{0}', idCount: 1 },
-  createBranch: { template: '/branch', idCount: 0 },
-  deleteBranch: { template: '/branch/{0}', idCount: 1 },
-  // Storage files
-  getFiles: { template: '/branch/default/files', idCount: 0 },
-  getFile: { template: '/files/{0}', idCount: 1 },
-  deleteFile: { template: '/files/{0}', idCount: 1 },
-  // Storage jobs
-  getJobs: { template: '/jobs', idCount: 0 },
-  getJob: { template: '/jobs/{0}', idCount: 1 },
-  // Storage tokens
-  getTokens: { template: '/tokens', idCount: 0 },
-  getToken: { template: '/tokens/{0}', idCount: 1 },
-  verifyToken: { template: '/tokens/verify', idCount: 0 },
-  createToken: { template: '/tokens', idCount: 0 },
-  refreshToken: { template: '/tokens/{0}', idCount: 1 },
-  revokeToken: { template: '/tokens/{0}', idCount: 1 },
-  // Storage workspaces
-  getWorkspaces: { template: '/workspaces', idCount: 0 },
-  getWorkspace: { template: '/workspaces/{0}', idCount: 1 },
-  createWorkspace: { template: '/workspaces', idCount: 0 },
-  deleteWorkspace: { template: '/workspaces/{0}', idCount: 1 },
-  resetWorkspacePassword: { template: '/workspaces/{0}/password', idCount: 1 },
-  loadDataIntoWorkspace: { template: '/workspaces/{0}/load', idCount: 1 },
-  cloneIntoWorkspace: { template: '/workspaces/{0}/clone', idCount: 1 },
-  // Storage merge requests
-  getMergeRequests: { template: '/branch/default/merge-requests', idCount: 0 },
-  getMergeRequest: { template: '/branch/default/merge-requests/{0}', idCount: 1 },
-  // Vault
-  listSecrets: { template: '/secrets', idCount: 0 },
-  getSecret: { template: '/secrets/{0}', idCount: 1 },
-  createSecret: { template: '/secrets', idCount: 0 },
-  deleteSecret: { template: '/secrets/{0}', idCount: 1 },
-  // Management
-  getOrganizations: { template: '/organizations', idCount: 0 },
-  getOrganization: { template: '/organizations/{0}', idCount: 1 },
-  getProjects: { template: '/projects', idCount: 0 },
-  getProject: { template: '/projects/{0}', idCount: 1 },
-  createProject: { template: '/projects', idCount: 0 },
-  deleteProject: { template: '/projects/{0}', idCount: 1 },
-  getProjectUsers: { template: '/projects/{0}/users', idCount: 1 },
-  addUserToProject: { template: '/projects/{0}/users', idCount: 1 },
-  removeUserFromProject: { template: '/projects/{0}/users/{1}', idCount: 2 },
-  getFeatures: { template: '/features', idCount: 0 },
-  // Queue
-  createJob: { template: '/jobs', idCount: 0 },
-  getQueueJob: { template: '/jobs/{0}', idCount: 1 },
-  listQueueJobs: { template: '/jobs', idCount: 0 },
-  terminateJob: { template: '/jobs/{0}/kill', idCount: 1 },
-  // Sandboxes
-  getSandboxes: { template: '/sandboxes', idCount: 0 },
-  getSandbox: { template: '/sandboxes/{0}', idCount: 1 },
-  deleteSandbox: { template: '/sandboxes/{0}', idCount: 1 },
-  // Editor
-  getEditorFile: { template: '/files/{0}', idCount: 1 },
-  getEditorFiles: { template: '/files', idCount: 0 },
-  saveFile: { template: '/files/{0}', idCount: 1 },
-  createEditorFile: { template: '/files', idCount: 0 },
-  deleteEditorFile: { template: '/files/{0}', idCount: 1 },
-  getEditorJobs: { template: '/jobs', idCount: 0 },
-  getEditorJob: { template: '/jobs/{0}', idCount: 1 },
-  createEditorJob: { template: '/jobs', idCount: 0 },
-  getKernels: { template: '/kernels', idCount: 0 },
-  getKernel: { template: '/kernels/{0}', idCount: 1 },
-  // Encryption
-  encrypt: { template: '/encrypt', idCount: 0 },
-  // Chat
-  postChatMessage: { template: '/chat', idCount: 0 },
-  getChatHistory: { template: '/chat/history', idCount: 0 },
-  createChatSession: { template: '/chat/sessions', idCount: 0 },
-  getChatSessions: { template: '/chat/sessions', idCount: 0 },
-  getChatSession: { template: '/chat/sessions/{0}', idCount: 1 },
-  deleteChatSession: { template: '/chat/sessions/{0}', idCount: 1 },
-  getChatModels: { template: '/chat/models', idCount: 0 },
-  streamChatResponse: { template: '/chat/stream', idCount: 0 },
-  // AI
-  generateDescription: { template: '/descriptions', idCount: 0 },
-  getAiModels: { template: '/models', idCount: 0 },
-  analyzeCode: { template: '/analyze', idCount: 0 },
-  suggestTransformation: { template: '/suggest', idCount: 0 },
-  // Query Service
-  executeQuery: { template: '/query', idCount: 0 },
-  getQueryResult: { template: '/query/{0}', idCount: 1 },
-  cancelQuery: { template: '/query/{0}/cancel', idCount: 1 },
-  getQueryHistory: { template: '/query/history', idCount: 0 },
-  // Metastore
-  getMetastoreDatabases: { template: '/databases', idCount: 0 },
-  getMetastoreDatabase: { template: '/databases/{0}', idCount: 1 },
-  getMetastoreSchemas: { template: '/databases/{0}/schemas', idCount: 1 },
-  getMetastoreSchema: { template: '/databases/{0}/schemas/{1}', idCount: 2 },
-  getMetastoreTables: { template: '/databases/{0}/schemas/{1}/tables', idCount: 2 },
-  getMetastoreTable: { template: '/databases/{0}/schemas/{1}/tables/{2}', idCount: 3 },
-  getMetastoreColumns: { template: '/databases/{0}/schemas/{1}/tables/{2}/columns', idCount: 3 },
-  refreshMetastore: { template: '/refresh', idCount: 0 },
-  getMetastoreStats: { template: '/stats', idCount: 0 },
-  // Sync Actions
-  runSyncAction: { template: '/actions', idCount: 0 },
-  getSyncActionResult: { template: '/actions/{0}', idCount: 1 },
-  listSyncActions: { template: '/actions', idCount: 0 },
-  getSyncActionConfigs: { template: '/actions/configs', idCount: 0 },
-};
-
+/**
+ * Build REST path from the urlTemplate and idCount passed by generated commands.
+ * Templates use {0}, {1}, ... for positional ID args and {branchId} etc. for named placeholders.
+ * No hand-maintained lookup table — every generated command carries its own template.
+ */
 function buildPathFromMethod(
   methodName: string,
   httpMethod: string,
+  urlTemplate: string,
+  idCount: number,
   args: unknown[],
-  basePath: string,
 ): { path: string; body?: string; query?: string } {
-  const mapping = METHOD_MAPPINGS[methodName];
-  if (!mapping) {
-    // Fallback: convert camelCase to /kebab-case path
+  // If no template provided (legacy fallback), convert method name to path
+  if (!urlTemplate && urlTemplate !== '') {
     const p = '/' + methodName
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
       .toLowerCase()
       .replace(/^(get|create|update|patch|delete|reset|list|search)-/, '');
-    return { path: basePath + p, body: args[0] ? JSON.stringify(args[0]) : undefined };
+    return { path: p, body: args[0] ? JSON.stringify(args[0]) : undefined };
   }
 
-  let template = mapping.template;
-  const idCount = mapping.idCount;
+  let template = urlTemplate;
 
+  // Replace positional placeholders {0}, {1}, ... with actual arg values
   for (let i = 0; i < idCount && i < args.length; i++) {
     template = template.replace('{' + String(i) + '}', String(args[i]));
   }
 
+  // Remaining args after IDs are consumed — could be options/body object
   const lastArg = args.length > idCount ? args[idCount] : undefined;
   const opts = (typeof lastArg === 'object' && lastArg !== null)
     ? lastArg as Record<string, unknown>
     : {};
 
+  // Replace named placeholders like {branchId}, {workspaceId} from options
   if (template.includes('{branchId}')) {
     const branchId = (opts['branchId'] as string) ?? 'default';
     template = template.replace('{branchId}', branchId);
+  }
+  if (template.includes('{workspaceId}')) {
+    const workspaceId = (opts['workspaceId'] as string) ?? '';
+    template = template.replace('{workspaceId}', workspaceId);
   }
 
   let bodyStr: string | undefined;
@@ -324,7 +192,7 @@ function buildPathFromMethod(
     if (queryArg && typeof queryArg === 'object') {
       const params = new URLSearchParams();
       for (const [key, value] of Object.entries(queryArg as Record<string, unknown>)) {
-        if (value !== undefined && value !== null && key !== 'branchId') {
+        if (value !== undefined && value !== null && key !== 'branchId' && key !== 'workspaceId') {
           params.set(key, String(value));
         }
       }
@@ -333,7 +201,7 @@ function buildPathFromMethod(
     }
   }
 
-  return { path: basePath + template, body: bodyStr, query: queryString };
+  return { path: template, body: bodyStr, query: queryString };
 }
 
 // ── CliContext ───────────────────────────────────────────────────────

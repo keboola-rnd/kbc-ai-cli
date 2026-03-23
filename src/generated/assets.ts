@@ -13,7 +13,7 @@ export function registerAssetsCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.assetsApi();
-        const result = await api._call('getPublishedChangelogPosts', 'GET');
+        const result = await api._call('getPublishedChangelogPosts', 'GET', '/platform-changelog/published-posts.json', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

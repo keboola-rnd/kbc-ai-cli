@@ -13,7 +13,7 @@ export function registerSandboxesCommands(parent: Command, ctx: CliContext) {
     .action(async (sandboxId, opts) => {
       try {
         const api: any = await ctx.sandboxesApi();
-        const result = await api._call('getSandbox', 'GET', sandboxId);
+        const result = await api._call('getSandbox', 'GET', '/sandboxes/{0}', 1, sandboxId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -27,7 +27,7 @@ export function registerSandboxesCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.sandboxesApi();
-        const result = await api._call('getSandboxes', 'GET', { branchId: opts['branch-id'] });
+        const result = await api._call('getSandboxes', 'GET', '/sandboxes', 0, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

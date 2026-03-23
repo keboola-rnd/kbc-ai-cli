@@ -13,7 +13,7 @@ export function registerStatusCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.statusApi();
-        const result = await api._call('getSummary', 'GET');
+        const result = await api._call('getSummary', 'GET', '/summary.json', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

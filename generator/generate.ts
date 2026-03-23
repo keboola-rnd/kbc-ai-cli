@@ -238,8 +238,10 @@ function generateCommand(
   const { preamble, callArgs } = buildCallArgs(method);
   if (preamble) lines.push(preamble.trimEnd());
   const httpMethod = method.httpMethod ?? 'GET';
+  const urlTemplate = method.urlTemplate;
+  const idCount = method.idCount;
   const callArgStr = callArgs ? `, ${callArgs}` : '';
-  lines.push(`        const result = await api._call('${method.name}', '${httpMethod}'${callArgStr});`);
+  lines.push(`        const result = await api._call('${method.name}', '${httpMethod}', '${urlTemplate}', ${idCount}${callArgStr});`);
   lines.push(`        ctx.output(result);`);
   lines.push(`      } catch (error: unknown) {`);
   lines.push(`        ctx.handleError(error);`);

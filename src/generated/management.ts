@@ -15,7 +15,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (projectId, opts) => {
       try {
         const api: any = (await ctx.managementApi()).projects;
-        const result = await api._call('getProject', 'GET', Number(projectId));
+        const result = await api._call('getProject', 'GET', '/projects/{0}', 1, Number(projectId));
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -29,7 +29,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (projectId, opts) => {
       try {
         const api: any = (await ctx.managementApi()).projects;
-        const result = await api._call('addProjectFeature', 'POST', Number(projectId), { feature: opts['feature'] });
+        const result = await api._call('addProjectFeature', 'POST', '/projects/{0}/features', 1, Number(projectId), { feature: opts['feature'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -43,7 +43,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (projectId, opts) => {
       try {
         const api: any = (await ctx.managementApi()).projects;
-        const result = await api._call('removeProjectFeature', 'DELETE', Number(projectId), { feature: opts['feature'] });
+        const result = await api._call('removeProjectFeature', 'DELETE', '/projects/{0}/features/{feature}', 1, Number(projectId), { feature: opts['feature'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -58,7 +58,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (projectId, opts) => {
       try {
         const api: any = (await ctx.managementApi()).projects;
-        const result = await api._call('changeProjectUserRole', 'PATCH', Number(projectId), { userId: opts['user-id'] !== undefined ? Number(opts['user-id']) : undefined, role: opts['role'] });
+        const result = await api._call('changeProjectUserRole', 'PATCH', '/projects/{0}/users/{userId}', 1, Number(projectId), { userId: opts['user-id'] !== undefined ? Number(opts['user-id']) : undefined, role: opts['role'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -74,7 +74,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = (await ctx.managementApi()).features;
-        const result = await api._call('getAllFeatures', 'GET', { type: opts['type'] });
+        const result = await api._call('getAllFeatures', 'GET', '/features', 0, { type: opts['type'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -90,7 +90,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (userIdOrMail, opts) => {
       try {
         const api: any = (await ctx.managementApi()).users;
-        const result = await api._call('addUserAdminFeature', 'POST', userIdOrMail, { feature: opts['feature'] });
+        const result = await api._call('addUserAdminFeature', 'POST', '/users/{0}/features', 1, userIdOrMail, { feature: opts['feature'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -104,7 +104,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (userIdOrMail, opts) => {
       try {
         const api: any = (await ctx.managementApi()).users;
-        const result = await api._call('removeUserAdminFeature', 'DELETE', userIdOrMail, { feature: opts['feature'] });
+        const result = await api._call('removeUserAdminFeature', 'DELETE', '/users/{0}/features/{feature}', 1, userIdOrMail, { feature: opts['feature'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

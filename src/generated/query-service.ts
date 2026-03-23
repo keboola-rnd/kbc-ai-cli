@@ -15,7 +15,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.queryServiceApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createQueryJob', 'POST', branchId, workspaceId, bodyData);
+        const result = await api._call('createQueryJob', 'POST', '/api/v1/branches/{0}/workspaces/{1}/queries', 2, branchId, workspaceId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -28,7 +28,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
     .action(async (queryJobId, opts) => {
       try {
         const api: any = await ctx.queryServiceApi();
-        const result = await api._call('cancelQueryJob', 'POST', queryJobId);
+        const result = await api._call('cancelQueryJob', 'POST', '/api/v1/queries/{0}/cancel', 1, queryJobId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -41,7 +41,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
     .action(async (queryJobId, opts) => {
       try {
         const api: any = await ctx.queryServiceApi();
-        const result = await api._call('getQueryJob', 'GET', queryJobId);
+        const result = await api._call('getQueryJob', 'GET', '/api/v1/queries/{0}', 1, queryJobId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -55,7 +55,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
     .action(async (queryJobId, statementId, opts) => {
       try {
         const api: any = await ctx.queryServiceApi();
-        const result = await api._call('getQueryResults', 'GET', queryJobId, statementId, { format: opts['format'] });
+        const result = await api._call('getQueryResults', 'GET', '/api/v1/queries/{0}/{1}/results', 2, queryJobId, statementId, { format: opts['format'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -69,7 +69,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
     .action(async (branchId, workspaceId, opts) => {
       try {
         const api: any = await ctx.queryServiceApi();
-        const result = await api._call('getQueryHistory', 'GET', branchId, workspaceId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
+        const result = await api._call('getQueryHistory', 'GET', '/api/v1/branches/{0}/workspaces/{1}/queries', 2, branchId, workspaceId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -83,7 +83,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
     .action(async (queryJobId, statementId, opts) => {
       try {
         const api: any = await ctx.queryServiceApi();
-        const result = await api._call('exportResults', 'GET', queryJobId, statementId, { format: opts['format'] });
+        const result = await api._call('exportResults', 'GET', '/api/v1/queries/{0}/{1}/export', 2, queryJobId, statementId, { format: opts['format'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

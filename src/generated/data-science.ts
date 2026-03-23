@@ -16,7 +16,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getApps', 'GET', { componentId: opts['component-id'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
+        const result = await api._call('getApps', 'GET', '/apps', 0, { componentId: opts['component-id'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -29,7 +29,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getApp', 'GET', appId);
+        const result = await api._call('getApp', 'GET', '/apps/{0}', 1, appId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -44,7 +44,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.dataScienceApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createApp', 'POST', bodyData);
+        const result = await api._call('createApp', 'POST', '/apps', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -59,7 +59,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.dataScienceApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('patchApp', 'PATCH', appId, bodyData);
+        const result = await api._call('patchApp', 'PATCH', '/apps/{0}', 1, appId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -72,7 +72,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('deleteApp', 'DELETE', appId);
+        const result = await api._call('deleteApp', 'DELETE', '/apps/{0}', 1, appId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -85,7 +85,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getAppPassword', 'GET', appId);
+        const result = await api._call('getAppPassword', 'GET', '/apps/{0}/password', 1, appId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -98,7 +98,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('resetAppPassword', 'POST', appId);
+        const result = await api._call('resetAppPassword', 'POST', '/apps/{0}/reset-password', 1, appId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -113,7 +113,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getAppRuns', 'GET', appId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
+        const result = await api._call('getAppRuns', 'GET', '/apps/{0}/runs', 1, appId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -126,7 +126,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, runId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getAppRun', 'GET', appId, runId);
+        const result = await api._call('getAppRun', 'GET', '/apps/{0}/runs/{1}', 2, appId, runId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -141,7 +141,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getAppLogsTail', 'GET', appId, { since: opts['since'], lines: opts['lines'] !== undefined ? Number(opts['lines']) : undefined });
+        const result = await api._call('getAppLogsTail', 'GET', '/apps/{0}/logs/tail', 1, appId, { since: opts['since'], lines: opts['lines'] !== undefined ? Number(opts['lines']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -154,7 +154,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (appId, opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getAppLogsDownload', 'GET', appId);
+        const result = await api._call('getAppLogsDownload', 'GET', '/apps/{0}/logs/download', 1, appId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -167,7 +167,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getRuntimes', 'GET');
+        const result = await api._call('getRuntimes', 'GET', '/runtimes', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

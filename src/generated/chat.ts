@@ -14,7 +14,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getHistory', 'GET', { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
+        const result = await api._call('getHistory', 'GET', '/history', 0, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -27,7 +27,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (chatId, opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getChat', 'GET', chatId);
+        const result = await api._call('getChat', 'GET', '/chat/{0}', 1, chatId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -40,7 +40,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (chatId, opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('deleteChat', 'DELETE', chatId);
+        const result = await api._call('deleteChat', 'DELETE', '/chat', 0, chatId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -55,7 +55,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.chatApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createChat', 'POST', bodyData);
+        const result = await api._call('createChat', 'POST', '/chat', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -68,7 +68,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (chatId, opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getVotes', 'GET', chatId);
+        const result = await api._call('getVotes', 'GET', '/vote', 0, chatId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -83,7 +83,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.chatApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('submitVote', 'PATCH', bodyData);
+        const result = await api._call('submitVote', 'PATCH', '/vote', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -96,7 +96,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getUsage', 'GET');
+        const result = await api._call('getUsage', 'GET', '/usage', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -111,7 +111,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.chatApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('getSuggestions', 'POST', bodyData);
+        const result = await api._call('getSuggestions', 'POST', '/suggestions', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -124,7 +124,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getAgentSettings', 'GET');
+        const result = await api._call('getAgentSettings', 'GET', '/settings', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -139,7 +139,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.chatApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('updateAgentSettings', 'PATCH', bodyData);
+        const result = await api._call('updateAgentSettings', 'PATCH', '/settings', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -152,7 +152,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getUserAgentSettings', 'GET');
+        const result = await api._call('getUserAgentSettings', 'GET', '/settings/user', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -167,7 +167,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.chatApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('updateUserAgentSettings', 'PATCH', bodyData);
+        const result = await api._call('updateUserAgentSettings', 'PATCH', '/settings/user', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -180,7 +180,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getToolsList', 'GET');
+        const result = await api._call('getToolsList', 'GET', '/settings/tools', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

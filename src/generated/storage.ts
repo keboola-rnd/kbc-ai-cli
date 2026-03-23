@@ -14,7 +14,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi();
-        const result = await api._call('getStackInfo', 'GET', { exclude: opts['exclude'] });
+        const result = await api._call('getStackInfo', 'GET', '', 0, { exclude: opts['exclude'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -30,7 +30,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getTables', 'GET', { include: opts['include'] });
+        const result = await api._call('getTables', 'GET', '/branch/default/tables', 0, { include: opts['include'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -43,7 +43,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (tableId, opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getTable', 'GET', tableId);
+        const result = await api._call('getTable', 'GET', '/branch/default/tables/{0}', 1, tableId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -58,7 +58,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (tableId, opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getDataPreview', 'GET', tableId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, format: opts['format'] });
+        const result = await api._call('getDataPreview', 'GET', '/branch/default/tables/{0}/data-preview', 1, tableId, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, format: opts['format'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -73,7 +73,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().tables;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('deleteTableRows', 'DELETE', tableId, bodyData);
+        const result = await api._call('deleteTableRows', 'DELETE', '/branch/default/tables/{0}/rows', 1, tableId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -89,7 +89,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('getBuckets', 'GET', { include: opts['include'] });
+        const result = await api._call('getBuckets', 'GET', '/branch/default/buckets', 0, { include: opts['include'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -102,7 +102,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (bucketId, opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('getBucket', 'GET', bucketId);
+        const result = await api._call('getBucket', 'GET', '/branch/default/buckets/{0}', 1, bucketId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -117,7 +117,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().buckets;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createBucket', 'POST', bodyData);
+        const result = await api._call('createBucket', 'POST', '/branch/default/buckets', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -132,7 +132,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().buckets;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('updateBucket', 'PATCH', bucketId, bodyData);
+        const result = await api._call('updateBucket', 'PATCH', '/branch/default/buckets/{0}', 1, bucketId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -145,7 +145,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (bucketId, opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('deleteBucket', 'DELETE', bucketId);
+        const result = await api._call('deleteBucket', 'DELETE', '/branch/default/buckets/{0}', 1, bucketId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -160,7 +160,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().buckets;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createScheduledRefresh', 'POST', bodyData);
+        const result = await api._call('createScheduledRefresh', 'POST', '/branch/default/buckets/scheduled-refresh', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -173,7 +173,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (taskId, opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('deleteScheduledTask', 'DELETE', taskId);
+        const result = await api._call('deleteScheduledTask', 'DELETE', '/branch/default/buckets/scheduled-tasks/{0}', 1, taskId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -191,7 +191,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponents', 'GET', { branchId: opts['branch-id'], type: opts['type'], include: opts['include'] });
+        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branch-id'], type: opts['type'], include: opts['include'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -205,7 +205,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponent', 'GET', componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getComponent', 'GET', '/branch/{branchId}/components/{0}', 1, componentId, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -219,7 +219,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurations', 'GET', componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, componentId, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -233,7 +233,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfiguration', 'GET', componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -249,7 +249,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfiguration', 'POST', componentId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfiguration', 'POST', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -263,7 +263,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfiguration', 'DELETE', componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('deleteConfiguration', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -280,7 +280,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('searchComponentConfigurations', 'GET', { branchId: opts['branch-id'], componentId: opts['component-id'], configId: opts['config-id'], query: opts['query'] });
+        const result = await api._call('searchComponentConfigurations', 'GET', '/branch/{branchId}/search/component-configurations', 0, { branchId: opts['branch-id'], componentId: opts['component-id'], configId: opts['config-id'], query: opts['query'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -294,7 +294,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurationWorkspaces', 'GET', componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurationWorkspaces', 'GET', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -310,7 +310,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationWorkspace', 'POST', componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationWorkspace', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -326,7 +326,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationRow', 'POST', componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationRow', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -341,7 +341,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, rowId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfigurationRow', 'DELETE', componentId, configId, rowId, { branchId: opts['branch-id'], changeDescription: opts['change-description'] });
+        const result = await api._call('deleteConfigurationRow', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', 3, componentId, configId, rowId, { branchId: opts['branch-id'], changeDescription: opts['change-description'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -356,7 +356,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('getDevBranches', 'GET');
+        const result = await api._call('getDevBranches', 'GET', '/dev-branches', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -371,7 +371,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().branches;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createDevBranchJob', 'POST', bodyData);
+        const result = await api._call('createDevBranchJob', 'POST', '/dev-branches', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -386,7 +386,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().branches;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('updateDevBranch', 'PUT', Number(branchId), bodyData);
+        const result = await api._call('updateDevBranch', 'PUT', '/dev-branches/{0}', 1, Number(branchId), bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -399,7 +399,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (branchId, opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('deleteDevBranchJob', 'DELETE', Number(branchId));
+        const result = await api._call('deleteDevBranchJob', 'DELETE', '/dev-branches/{0}', 1, Number(branchId));
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -412,7 +412,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (branchId, opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('getDevBranchMetadata', 'GET', branchId);
+        const result = await api._call('getDevBranchMetadata', 'GET', '/branch/{0}/metadata', 1, branchId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -429,7 +429,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().files;
-        const result = await api._call('getFiles', 'GET', { tags: opts['tags'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
+        const result = await api._call('getFiles', 'GET', '/files', 0, { tags: opts['tags'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -442,7 +442,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (fileId, opts) => {
       try {
         const api: any = ctx.storageApi().files;
-        const result = await api._call('deleteFile', 'DELETE', Number(fileId));
+        const result = await api._call('deleteFile', 'DELETE', '/files/{0}', 1, Number(fileId));
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -455,7 +455,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (fileId, tag, opts) => {
       try {
         const api: any = ctx.storageApi().files;
-        const result = await api._call('addFileTag', 'POST', Number(fileId), tag);
+        const result = await api._call('addFileTag', 'POST', '/files/{0}/tags', 1, Number(fileId), tag);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -468,7 +468,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (fileId, tag, opts) => {
       try {
         const api: any = ctx.storageApi().files;
-        const result = await api._call('deleteFileTag', 'DELETE', Number(fileId), tag);
+        const result = await api._call('deleteFileTag', 'DELETE', '/files/{0}/tags/{1}', 2, Number(fileId), tag);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -484,7 +484,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().jobs;
-        const result = await api._call('getJobs', 'GET', { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
+        const result = await api._call('getJobs', 'GET', '/jobs', 0, { limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -497,7 +497,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (jobId, opts) => {
       try {
         const api: any = ctx.storageApi().jobs;
-        const result = await api._call('getJob', 'GET', Number(jobId));
+        const result = await api._call('getJob', 'GET', '/jobs/{0}', 1, Number(jobId));
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -512,7 +512,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (branchId, opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspaces', 'GET', branchId);
+        const result = await api._call('getWorkspaces', 'GET', '/branch/{0}/workspaces', 1, branchId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -527,7 +527,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspace', 'GET', { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -542,7 +542,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('deleteWorkspace', 'DELETE', { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -557,7 +557,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('resetWorkspacePassword', 'POST', { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('resetWorkspacePassword', 'POST', '/branch/{branchId}/workspaces/{workspaceId}/password', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -572,7 +572,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('setWorkspacePublicKey', 'POST', { workspaceId: opts['workspace-id'], publicKey: opts['public-key'] });
+        const result = await api._call('setWorkspacePublicKey', 'POST', '/workspaces/{workspaceId}/public-key', 0, { workspaceId: opts['workspace-id'], publicKey: opts['public-key'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -587,7 +587,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspaceSaml2Login', 'GET', { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('getWorkspaceSaml2Login', 'GET', '/branch/{branchId}/workspaces/{workspaceId}/saml2-login', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -602,7 +602,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().tokens;
-        const result = await api._call('verify', 'GET');
+        const result = await api._call('verify', 'GET', '/tokens/verify', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -617,7 +617,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().mergeRequests;
-        const result = await api._call('getMergeRequests', 'GET');
+        const result = await api._call('getMergeRequests', 'GET', '/merge-request', 0);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

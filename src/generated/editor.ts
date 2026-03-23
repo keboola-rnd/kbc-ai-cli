@@ -15,7 +15,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createSession', 'POST', bodyData);
+        const result = await api._call('createSession', 'POST', '/sql/sessions', 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -28,7 +28,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSession', 'GET', sessionId);
+        const result = await api._call('getSession', 'GET', '/sql/sessions/{0}', 1, sessionId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -42,7 +42,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSessions', 'GET', { workspaceId: opts['workspace-id'] });
+        const result = await api._call('getSessions', 'GET', '/sql/sessions', 0, { workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -57,7 +57,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSessionSchema', 'GET', sessionId, { onlyWorkspaceSchema: opts['only-workspace-schema'], loadTables: opts['load-tables'] });
+        const result = await api._call('getSessionSchema', 'GET', '/sql/sessions/{0}/schema', 1, sessionId, { onlyWorkspaceSchema: opts['only-workspace-schema'], loadTables: opts['load-tables'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -70,7 +70,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSessionCredentials', 'GET', sessionId);
+        const result = await api._call('getSessionCredentials', 'GET', '/sql/sessions/{0}/credentials', 1, sessionId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -85,7 +85,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createQueryJob', 'POST', sessionId, bodyData);
+        const result = await api._call('createQueryJob', 'POST', '/sql/sessions/{0}/run-query', 1, sessionId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -100,7 +100,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('tablePreview', 'POST', sessionId, bodyData);
+        const result = await api._call('tablePreview', 'POST', '/sql/sessions/{0}/table-preview', 1, sessionId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -115,7 +115,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('tableDefinition', 'GET', sessionId, bodyData);
+        const result = await api._call('tableDefinition', 'GET', '/sql/sessions/{0}/table-ddl', 1, sessionId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -130,7 +130,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('load', 'POST', sessionId, bodyData);
+        const result = await api._call('load', 'POST', '/sql/sessions/{0}/load', 1, sessionId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -145,7 +145,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.editorApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('unload', 'POST', sessionId, bodyData);
+        const result = await api._call('unload', 'POST', '/sql/sessions/{0}/unload', 1, sessionId, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -158,7 +158,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getWorkspacePassword', 'GET', sessionId);
+        const result = await api._call('getWorkspacePassword', 'GET', '/sql/sessions/{0}/workspace-password', 1, sessionId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -171,7 +171,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('resetWorkspacePassword', 'POST', sessionId);
+        const result = await api._call('resetWorkspacePassword', 'POST', '/sql/sessions/{0}/reset-password', 1, sessionId);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
