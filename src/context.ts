@@ -348,8 +348,7 @@ export class CliContext {
       );
     }
 
-    printError('Not authenticated. Run: kbc auth login --stack <URL> --token <TOKEN>');
-    process.exit(1);
+    throw new Error('Not authenticated. Run: kbc auth login --stack <URL> --token <TOKEN>');
   }
 
   resolveAppId(explicitId?: string): string {
