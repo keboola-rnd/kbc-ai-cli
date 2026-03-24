@@ -14,7 +14,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi();
-        const result = await api._call('getStackInfo', 'GET', '', 0, { exclude: opts['exclude'] });
+        const result = await api._call('getStackInfo', 'GET', '/', 0, { exclude: opts['exclude'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

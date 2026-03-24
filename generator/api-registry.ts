@@ -247,7 +247,7 @@ const storage: ServiceDef = {
       cliName: 'info',
       description: 'Get stack info (services, features, components)',
       httpMethod: 'GET',
-      urlTemplate: '',
+      urlTemplate: '/',
       idCount: 0,
       args: [],
       options: [{ name: 'exclude', description: 'Exclude sections (e.g. componentDetails)', type: 'string' }],
