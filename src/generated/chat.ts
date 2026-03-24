@@ -34,13 +34,14 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       }
     });
 
-  service.command('delete <chat-id>')
+  service.command('delete')
     .description('Delete a chat [DELETE]')
+    .option('--id <value>', 'Chat ID (required)')
     .option('--json', 'Output raw JSON')
-    .action(async (chatId, opts) => {
+    .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('deleteChat', 'DELETE', '/chat', 0, chatId);
+        const result = await api._call('deleteChat', 'DELETE', '/chat', 0, { id: opts['id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -62,13 +63,14 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
       }
     });
 
-  service.command('votes <chat-id>')
+  service.command('votes')
     .description('Get votes for a chat [GET]')
+    .option('--chat-id <value>', 'Chat ID (required)')
     .option('--json', 'Output raw JSON')
-    .action(async (chatId, opts) => {
+    .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getVotes', 'GET', '/vote', 0, chatId);
+        const result = await api._call('getVotes', 'GET', '/vote', 0, { chatId: opts['chat-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

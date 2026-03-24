@@ -1357,8 +1357,8 @@ const chat: ServiceDef = {
       httpMethod: 'DELETE',
       urlTemplate: '/chat',
       idCount: 0,
-      args: [{ name: 'chatId', description: 'Chat ID', required: true, type: 'string' }],
-      options: [],
+      args: [],
+      options: [{ name: 'id', description: 'Chat ID', type: 'string', required: true }],
     },
     {
       name: 'createChat',
@@ -1377,8 +1377,8 @@ const chat: ServiceDef = {
       httpMethod: 'GET',
       urlTemplate: '/vote',
       idCount: 0,
-      args: [{ name: 'chatId', description: 'Chat ID', required: true, type: 'string' }],
-      options: [],
+      args: [],
+      options: [{ name: 'chat-id', description: 'Chat ID', type: 'string', required: true }],
     },
     {
       name: 'submitVote',

@@ -175,24 +175,40 @@ function buildCallArgs(method: MethodDef): { preamble: string; callArgs: string 
   if (hasJsonData) {
     preamble = `        const bodyData = opts.data ? JSON.parse(opts.data) : {};\n`;
   }
+
+  // Separate ID positional args (consumed by URL template) from non-ID positional args
+  const idArgs = method.args.slice(0, method.idCount);
+  const nonIdArgs = method.args.slice(method.idCount);
+
+  // ID args are passed as separate positional params (they go into URL placeholders)
   const args: string[] = [];
-  for (const arg of method.args) {
+  for (const arg of idArgs) {
     args.push(arg.type === 'number' ? `Number(${arg.name})` : arg.name);
   }
+
+  // Non-ID positional args + options are merged into a single object.
+  // This ensures buildPathFromMethod always receives an object at args[idCount].
+  const nonIdEntries = nonIdArgs.map((a) => {
+    const cn = kebabToCamel(a.name);
+    return a.type === 'number' ? `${cn}: Number(${a.name})` : `${cn}: ${a.name}`;
+  });
   const nonDataOpts = method.options.filter((o) => o.name !== 'data');
-  if (hasJsonData && nonDataOpts.length === 0) {
-    args.push('bodyData');
-  } else if (hasJsonData && nonDataOpts.length > 0) {
-    const extras = nonDataOpts.map((o) => `${kebabToCamel(o.name)}: opts['${o.name}']`).join(', ');
-    args.push(`{ ...bodyData, ${extras} }`);
-  } else if (nonDataOpts.length > 0 && !hasJsonData) {
-    const optEntries = nonDataOpts.map((o) => {
-      const cn = kebabToCamel(o.name);
-      return o.type === 'number'
-        ? `${cn}: opts['${o.name}'] !== undefined ? Number(opts['${o.name}']) : undefined`
-        : `${cn}: opts['${o.name}']`;
-    }).join(', ');
-    args.push(`{ ${optEntries} }`);
+  const optEntries = nonDataOpts.map((o) => {
+    const cn = kebabToCamel(o.name);
+    return o.type === 'number'
+      ? `${cn}: opts['${o.name}'] !== undefined ? Number(opts['${o.name}']) : undefined`
+      : `${cn}: opts['${o.name}']`;
+  });
+
+  if (hasJsonData) {
+    const extras = [...nonIdEntries, ...optEntries];
+    if (extras.length === 0) {
+      args.push('bodyData');
+    } else {
+      args.push(`{ ...bodyData, ${extras.join(', ')} }`);
+    }
+  } else if (nonIdEntries.length > 0 || optEntries.length > 0) {
+    args.push(`{ ${[...nonIdEntries, ...optEntries].join(', ')} }`);
   }
   return { preamble, callArgs: args.join(', ') };
 }

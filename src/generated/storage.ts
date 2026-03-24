@@ -519,7 +519,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (fileId, tag, opts) => {
       try {
         const api: any = ctx.storageApi().files;
-        const result = await api._call('addFileTag', 'POST', '/files/{0}/tags', 1, Number(fileId), tag);
+        const result = await api._call('addFileTag', 'POST', '/files/{0}/tags', 1, Number(fileId), { tag: tag });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

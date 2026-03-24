@@ -183,29 +183,24 @@ function buildPathFromMethod(
   }
 
   let bodyStr: string | undefined;
-  // POST/PATCH/PUT and DELETE-with-body all need body serialization
-  if (isWriteMethod(httpMethod) || httpMethod === 'DELETE') {
-    const bodyArg = args[idCount];
-    if (bodyArg && typeof bodyArg === 'object') {
-      bodyStr = JSON.stringify(bodyArg);
-    } else if (bodyArg && typeof bodyArg === 'string' && isWriteMethod(httpMethod)) {
-      // Non-ID positional string arg (e.g. encrypt <value>) — check if next arg is options
-      const nextArg = args.length > idCount + 1 ? args[idCount + 1] : undefined;
-      if (nextArg && typeof nextArg === 'object') {
-        // Merge the string arg into the options object as the body
-        bodyStr = JSON.stringify({ value: bodyArg, ...(nextArg as Record<string, unknown>) });
-      } else {
-        bodyStr = JSON.stringify(bodyArg);
-      }
-    }
-  }
-
   let queryString: string | undefined;
-  if (!isWriteMethod(httpMethod) && httpMethod !== 'DELETE') {
-    const queryArg = args[idCount];
-    if (queryArg && typeof queryArg === 'object') {
+
+  if (isWriteMethod(httpMethod)) {
+    // POST/PATCH/PUT — serialize object as JSON body
+    if (opts && Object.keys(opts).length > 0) {
+      bodyStr = JSON.stringify(opts);
+    }
+  } else if (httpMethod === 'DELETE') {
+    // DELETE — some APIs use body, some use query params.
+    // Send as body (most common for Keboola APIs).
+    if (opts && Object.keys(opts).length > 0) {
+      bodyStr = JSON.stringify(opts);
+    }
+  } else {
+    // GET and other read methods — serialize as query string
+    if (opts && Object.keys(opts).length > 0) {
       const params = new URLSearchParams();
-      for (const [key, value] of Object.entries(queryArg as Record<string, unknown>)) {
+      for (const [key, value] of Object.entries(opts)) {
         if (value !== undefined && value !== null && key !== 'branchId' && key !== 'workspaceId') {
           params.set(key, String(value));
         }
