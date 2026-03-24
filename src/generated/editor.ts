@@ -51,8 +51,8 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('schema <session-id>')
     .description('Get session schema [GET]')
-    .option('--only-workspace-schema <value>', 'Only workspace schema')
-    .option('--load-tables <value>', 'Load tables')
+    .option('--only-workspace-schema <value>', 'Only workspace schema', "1")
+    .option('--load-tables <value>', 'Load tables', "1")
     .option('--json', 'Output raw JSON')
     .action(async (sessionId, opts) => {
       try {

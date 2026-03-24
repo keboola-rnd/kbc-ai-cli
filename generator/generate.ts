@@ -231,10 +231,11 @@ function generateCommand(
   lines.push(`    .description('${method.description}${httpHint}')`);
   for (const opt of method.options) {
     const flag = opt.type === 'boolean' ? `--${opt.name}` : `--${opt.name} <value>`;
+    const defaultSuffix = opt.defaultValue !== undefined ? `, ${JSON.stringify(opt.defaultValue)}` : '';
     if (opt.required) {
-      lines.push(`    .requiredOption('${flag}', '${opt.description}')`);
+      lines.push(`    .requiredOption('${flag}', '${opt.description}'${defaultSuffix})`);
     } else {
-      lines.push(`    .option('${flag}', '${opt.description}')`);
+      lines.push(`    .option('${flag}', '${opt.description}'${defaultSuffix})`);
     }
   }
   lines.push(`    .option('--json', 'Output raw JSON')`);
