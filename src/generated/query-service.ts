@@ -9,7 +9,7 @@ export function registerQueryServiceCommands(parent: Command, ctx: CliContext) {
 
   service.command('create <branch-id> <workspace-id>')
     .description('Create a query job [POST]')
-    .option('--data <value>', 'Query as JSON (required)')
+    .requiredOption('--data <value>', 'Query as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (branchId, workspaceId, opts) => {
       try {

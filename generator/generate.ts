@@ -231,8 +231,11 @@ function generateCommand(
   lines.push(`    .description('${method.description}${httpHint}')`);
   for (const opt of method.options) {
     const flag = opt.type === 'boolean' ? `--${opt.name}` : `--${opt.name} <value>`;
-    const req = opt.required ? ' (required)' : '';
-    lines.push(`    .option('${flag}', '${opt.description}${req}')`);
+    if (opt.required) {
+      lines.push(`    .requiredOption('${flag}', '${opt.description}')`);
+    } else {
+      lines.push(`    .option('${flag}', '${opt.description}')`);
+    }
   }
   lines.push(`    .option('--json', 'Output raw JSON')`);
 

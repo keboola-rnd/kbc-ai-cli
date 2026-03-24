@@ -9,7 +9,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   service.command('enroll-mfa')
     .description('Enroll MFA for a user [POST]')
-    .option('--data <value>', 'MFA enrollment data as JSON (required)')
+    .requiredOption('--data <value>', 'MFA enrollment data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -26,7 +26,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   group_gitRepository.command('data-app-public')
     .description('Get data app public git repository info [POST]')
-    .option('--data <value>', 'Repository URL and options as JSON (required)')
+    .requiredOption('--data <value>', 'Repository URL and options as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -41,7 +41,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   group_gitRepository.command('data-app-private-password')
     .description('Get data app private git repository (password auth) [POST]')
-    .option('--data <value>', 'Repository URL, username, password as JSON (required)')
+    .requiredOption('--data <value>', 'Repository URL, username, password as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -56,7 +56,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   group_gitRepository.command('data-app-private-ssh')
     .description('Get data app private git repository (SSH key auth) [POST]')
-    .option('--data <value>', 'Repository URL, username, SSH key as JSON (required)')
+    .requiredOption('--data <value>', 'Repository URL, username, SSH key as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -71,7 +71,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   group_gitRepository.command('public')
     .description('Get public git repository info [POST]')
-    .option('--data <value>', 'Repository URL and options as JSON (required)')
+    .requiredOption('--data <value>', 'Repository URL and options as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -86,7 +86,7 @@ export function registerSyncActionsCommands(parent: Command, ctx: CliContext) {
 
   group_gitRepository.command('private')
     .description('Get private git repository info (password auth) [POST]')
-    .option('--data <value>', 'Repository URL, username, password as JSON (required)')
+    .requiredOption('--data <value>', 'Repository URL, username, password as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

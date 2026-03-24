@@ -49,7 +49,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
 
   service.command('create')
     .description('Create a variable [POST]')
-    .option('--data <value>', 'Variable definition as JSON (required)')
+    .requiredOption('--data <value>', 'Variable definition as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

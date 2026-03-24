@@ -11,7 +11,7 @@ export function registerTelemetryCommands(parent: Command, ctx: CliContext) {
 
   group_provisioning.command('create-credentials')
     .description('Create telemetry workspace credentials [POST]')
-    .option('--data <value>', 'Credentials request as JSON (required)')
+    .requiredOption('--data <value>', 'Credentials request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

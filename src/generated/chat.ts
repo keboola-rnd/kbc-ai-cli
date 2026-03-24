@@ -36,7 +36,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('delete')
     .description('Delete a chat [DELETE]')
-    .option('--id <value>', 'Chat ID (required)')
+    .requiredOption('--id <value>', 'Chat ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -50,7 +50,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('create')
     .description('Create a new chat [POST]')
-    .option('--data <value>', 'Chat request as JSON (required)')
+    .requiredOption('--data <value>', 'Chat request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -65,7 +65,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('votes')
     .description('Get votes for a chat [GET]')
-    .option('--chat-id <value>', 'Chat ID (required)')
+    .requiredOption('--chat-id <value>', 'Chat ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -79,7 +79,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('vote')
     .description('Submit a vote [PATCH]')
-    .option('--data <value>', 'Vote data as JSON (required)')
+    .requiredOption('--data <value>', 'Vote data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -107,7 +107,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('suggestions')
     .description('Get chat suggestions [POST]')
-    .option('--data <value>', 'Suggestions request as JSON (required)')
+    .requiredOption('--data <value>', 'Suggestions request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -135,7 +135,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('update-agent-settings')
     .description('Update agent settings [PATCH]')
-    .option('--data <value>', 'Settings as JSON (required)')
+    .requiredOption('--data <value>', 'Settings as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -163,7 +163,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
 
   service.command('update-user-settings')
     .description('Update user agent settings [PATCH]')
-    .option('--data <value>', 'Settings as JSON (required)')
+    .requiredOption('--data <value>', 'Settings as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

@@ -25,7 +25,7 @@ export function registerEncryptionCommands(parent: Command, ctx: CliContext) {
 
   service.command('encrypt-secrets')
     .description('Encrypt secrets in a JSON object (keys prefixed with #) [POST]')
-    .option('--data <value>', 'JSON object with #-prefixed secret keys (required)')
+    .requiredOption('--data <value>', 'JSON object with #-prefixed secret keys')
     .option('--project-id <value>', 'Project ID')
     .option('--component-id <value>', 'Component ID')
     .option('--branch-type <value>', 'Branch type')

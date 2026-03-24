@@ -111,7 +111,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_buckets.command('create')
     .description('Create a new bucket [POST]')
-    .option('--data <value>', 'Bucket definition as JSON (required)')
+    .requiredOption('--data <value>', 'Bucket definition as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -126,7 +126,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_buckets.command('update <bucket-id>')
     .description('Update a bucket [PATCH]')
-    .option('--data <value>', 'Update data as JSON (required)')
+    .requiredOption('--data <value>', 'Update data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (bucketId, opts) => {
       try {
@@ -154,7 +154,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_buckets.command('schedule-refresh')
     .description('Create a scheduled refresh for a bucket [POST]')
-    .option('--data <value>', 'Schedule config as JSON (branchId, bucketId, cronExpression) (required)')
+    .requiredOption('--data <value>', 'Schedule config as JSON (branchId, bucketId, cronExpression)')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -242,7 +242,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('create <component-id>')
     .description('Create a configuration [POST]')
-    .option('--data <value>', 'Configuration as JSON (required)')
+    .requiredOption('--data <value>', 'Configuration as JSON')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, opts) => {
@@ -303,7 +303,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('create-workspace <component-id> <config-id>')
     .description('Create a workspace for a configuration [POST]')
-    .option('--data <value>', 'Workspace config as JSON (required)')
+    .requiredOption('--data <value>', 'Workspace config as JSON')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, configId, opts) => {
@@ -319,7 +319,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('create-row <component-id> <config-id>')
     .description('Create a configuration row [POST]')
-    .option('--data <value>', 'Row data as JSON (required)')
+    .requiredOption('--data <value>', 'Row data as JSON')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, configId, opts) => {
@@ -350,7 +350,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('delete-batch <component-id>')
     .description('Delete multiple configurations (batch) [DELETE]')
-    .option('--data <value>', 'JSON with configIds array (required)')
+    .requiredOption('--data <value>', 'JSON with configIds array')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, opts) => {
@@ -366,7 +366,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('create-rows <component-id> <config-id>')
     .description('Create multiple configuration rows (batch, sequential) [POST]')
-    .option('--data <value>', 'JSON with array of row definitions (required)')
+    .requiredOption('--data <value>', 'JSON with array of row definitions')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, configId, opts) => {
@@ -382,7 +382,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('delete-rows <component-id> <config-id>')
     .description('Delete multiple configuration rows (batch) [DELETE]')
-    .option('--data <value>', 'JSON with rowIds array and optional changeDescription (required)')
+    .requiredOption('--data <value>', 'JSON with rowIds array and optional changeDescription')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, configId, opts) => {
@@ -398,7 +398,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_componentsAndConfigurations.command('create-workspace-job <component-id> <config-id>')
     .description('Create a workspace for a configuration (async job) [POST]')
-    .option('--data <value>', 'Workspace config as JSON (async=true) (required)')
+    .requiredOption('--data <value>', 'Workspace config as JSON (async=true)')
     .option('--branch-id <value>', 'Branch ID')
     .option('--json', 'Output raw JSON')
     .action(async (componentId, configId, opts) => {
@@ -429,7 +429,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_branches.command('create')
     .description('Create a dev branch [POST]')
-    .option('--data <value>', 'Branch definition as JSON (name, description) (required)')
+    .requiredOption('--data <value>', 'Branch definition as JSON (name, description)')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -444,7 +444,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_branches.command('update <branch-id>')
     .description('Update a dev branch [PUT]')
-    .option('--data <value>', 'Update data as JSON (required)')
+    .requiredOption('--data <value>', 'Update data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (branchId, opts) => {
       try {
@@ -585,8 +585,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('get')
     .description('Get workspace detail [GET]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -600,8 +600,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('delete')
     .description('Delete a workspace [DELETE]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -615,8 +615,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('reset-password')
     .description('Reset workspace password [POST]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -630,8 +630,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('set-public-key')
     .description('Set workspace public key (Snowflake only) [POST]')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
-    .option('--public-key <value>', 'Public key (required)')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
+    .requiredOption('--public-key <value>', 'Public key')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -645,8 +645,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('saml2-login')
     .description('Get SAML2 login URL for a workspace [GET]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -660,8 +660,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('delete-batch')
     .description('Delete multiple workspaces (batch) [DELETE]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--data <value>', 'JSON with workspaceIds array (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--data <value>', 'JSON with workspaceIds array')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -676,8 +676,8 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
 
   group_workspaces.command('delete-job')
     .description('Delete a workspace (async job) [DELETE]')
-    .option('--branch-id <value>', 'Branch ID (required)')
-    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

@@ -9,7 +9,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('describe-version')
     .description('Describe a configuration version [POST]')
-    .option('--data <value>', 'Request as JSON (required)')
+    .requiredOption('--data <value>', 'Request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -24,7 +24,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('describe-merge')
     .description('Describe a configuration merge [POST]')
-    .option('--data <value>', 'Request as JSON (required)')
+    .requiredOption('--data <value>', 'Request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -39,7 +39,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('explain-error')
     .description('Explain an error message using AI [POST]')
-    .option('--data <value>', 'Error details as JSON (required)')
+    .requiredOption('--data <value>', 'Error details as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -54,7 +54,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('describe-config')
     .description('Describe a configuration using AI [POST]')
-    .option('--data <value>', 'Configuration details as JSON (required)')
+    .requiredOption('--data <value>', 'Configuration details as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -69,7 +69,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('suggest-component')
     .description('Suggest a component using AI [POST]')
-    .option('--data <value>', 'Suggestion request as JSON (required)')
+    .requiredOption('--data <value>', 'Suggestion request as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -84,7 +84,7 @@ export function registerAiCommands(parent: Command, ctx: CliContext) {
 
   service.command('feedback')
     .description('Submit AI feedback [POST]')
-    .option('--data <value>', 'Feedback as JSON (required)')
+    .requiredOption('--data <value>', 'Feedback as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {

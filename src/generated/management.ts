@@ -24,7 +24,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
 
   group_projects.command('add-feature <project-id>')
     .description('Add a feature to a project [POST]')
-    .option('--feature <value>', 'Feature name (required)')
+    .requiredOption('--feature <value>', 'Feature name')
     .option('--json', 'Output raw JSON')
     .action(async (projectId, opts) => {
       try {
@@ -38,7 +38,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
 
   group_projects.command('remove-feature <project-id>')
     .description('Remove a feature from a project [DELETE]')
-    .option('--feature <value>', 'Feature name (required)')
+    .requiredOption('--feature <value>', 'Feature name')
     .option('--json', 'Output raw JSON')
     .action(async (projectId, opts) => {
       try {
@@ -52,8 +52,8 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
 
   group_projects.command('change-role <project-id>')
     .description('Change a user role in a project [PATCH]')
-    .option('--user-id <value>', 'User ID (required)')
-    .option('--role <value>', 'New role (required)')
+    .requiredOption('--user-id <value>', 'User ID')
+    .requiredOption('--role <value>', 'New role')
     .option('--json', 'Output raw JSON')
     .action(async (projectId, opts) => {
       try {
@@ -85,7 +85,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
 
   group_users.command('add-feature <user-id-or-mail>')
     .description('Add an admin feature to a user [POST]')
-    .option('--feature <value>', 'Feature name (required)')
+    .requiredOption('--feature <value>', 'Feature name')
     .option('--json', 'Output raw JSON')
     .action(async (userIdOrMail, opts) => {
       try {
@@ -99,7 +99,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
 
   group_users.command('remove-feature <user-id-or-mail>')
     .description('Remove an admin feature from a user [DELETE]')
-    .option('--feature <value>', 'Feature name (required)')
+    .requiredOption('--feature <value>', 'Feature name')
     .option('--json', 'Output raw JSON')
     .action(async (userIdOrMail, opts) => {
       try {

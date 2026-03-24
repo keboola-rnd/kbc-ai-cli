@@ -50,7 +50,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
 
   group_repository.command('create <object-type>')
     .description('Create a metadata object [POST]')
-    .option('--data <value>', 'Object data as JSON (required)')
+    .requiredOption('--data <value>', 'Object data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (objectType, opts) => {
       try {
@@ -65,7 +65,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
 
   group_repository.command('update <object-type> <uuid>')
     .description('Update a metadata object (partial) [PATCH]')
-    .option('--data <value>', 'Update data as JSON (required)')
+    .requiredOption('--data <value>', 'Update data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (objectType, uuid, opts) => {
       try {
@@ -80,7 +80,7 @@ export function registerMetastoreCommands(parent: Command, ctx: CliContext) {
 
   group_repository.command('replace <object-type> <uuid>')
     .description('Replace a metadata object (full) [PUT]')
-    .option('--data <value>', 'Replacement data as JSON (required)')
+    .requiredOption('--data <value>', 'Replacement data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (objectType, uuid, opts) => {
       try {

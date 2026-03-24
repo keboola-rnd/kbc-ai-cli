@@ -9,7 +9,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('create-session')
     .description('Create an SQL editor session [POST]')
-    .option('--data <value>', 'Session config as JSON (branchId, componentId, configurationId, loadMode?, loginType?) (required)')
+    .requiredOption('--data <value>', 'Session config as JSON (branchId, componentId, configurationId, loadMode?, loginType?)')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -79,7 +79,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('run-query <session-id>')
     .description('Run a query [POST]')
-    .option('--data <value>', 'Query data as JSON (required)')
+    .requiredOption('--data <value>', 'Query data as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (sessionId, opts) => {
       try {
@@ -94,7 +94,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('table-preview <session-id>')
     .description('Preview a table in session [POST]')
-    .option('--data <value>', 'Preview options as JSON (required)')
+    .requiredOption('--data <value>', 'Preview options as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (sessionId, opts) => {
       try {
@@ -109,7 +109,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('table-definition <session-id>')
     .description('Get table DDL definition [GET]')
-    .option('--data <value>', 'Options as JSON (table ID, query params) (required)')
+    .requiredOption('--data <value>', 'Options as JSON (table ID, query params)')
     .option('--json', 'Output raw JSON')
     .action(async (sessionId, opts) => {
       try {
@@ -124,7 +124,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
 
   service.command('load <session-id>')
     .description('Load data into session [POST]')
-    .option('--data <value>', 'Load options as JSON (required)')
+    .requiredOption('--data <value>', 'Load options as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (sessionId, opts) => {
       try {

@@ -205,8 +205,9 @@ function buildPathFromMethod(
   idCount: number,
   args: unknown[],
 ): { path: string; body?: string; query?: string } {
-  // If no template provided (legacy fallback), convert method name to path
-  if (!urlTemplate && urlTemplate !== '') {
+  // If no template provided (legacy fallback), convert method name to path.
+  // Legacy calls from the proxy catch-all pass '' as urlTemplate.
+  if (urlTemplate === '') {
     const p = '/' + methodName
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
       .toLowerCase()

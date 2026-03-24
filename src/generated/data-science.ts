@@ -38,7 +38,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
 
   service.command('create-app')
     .description('Create a new data app [POST]')
-    .option('--data <value>', 'Request body as JSON (required)')
+    .requiredOption('--data <value>', 'Request body as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
@@ -53,7 +53,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
 
   service.command('patch-app <app-id>')
     .description('Update a data app (partial) [PATCH]')
-    .option('--data <value>', 'Request body as JSON (required)')
+    .requiredOption('--data <value>', 'Request body as JSON')
     .option('--json', 'Output raw JSON')
     .action(async (appId, opts) => {
       try {
