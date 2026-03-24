@@ -16,7 +16,7 @@ export function registerEncryptionCommands(parent: Command, ctx: CliContext) {
     .action(async (value, opts) => {
       try {
         const api: any = await ctx.encryptionApi();
-        const result = await api._call('encrypt', 'POST', '/encrypt', 0, { value: value, projectId: opts['project-id'], componentId: opts['component-id'], branchType: opts['branch-type'] });
+        const result = await api._callText('encrypt', 'POST', '/encrypt', value, { projectId: opts['project-id'], componentId: opts['component-id'], branchType: opts['branch-type'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

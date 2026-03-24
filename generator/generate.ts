@@ -258,7 +258,19 @@ function generateCommand(
   const urlTemplate = method.urlTemplate;
   const idCount = method.idCount;
   const callArgStr = callArgs ? `, ${callArgs}` : '';
-  lines.push(`        const result = await api._call('${method.name}', '${httpMethod}', '${urlTemplate}', ${idCount}${callArgStr});`);
+
+  if (method.textBody) {
+    // textBody methods send plain text body + query params (e.g. encryption encrypt)
+    const textArgName = method.textBody;
+    const queryOpts = method.options.map((o) => {
+      const cn = kebabToCamel(o.name);
+      return `${cn}: opts['${o.name}']`;
+    });
+    const queryObj = queryOpts.length > 0 ? `{ ${queryOpts.join(', ')} }` : 'undefined';
+    lines.push(`        const result = await api._callText('${method.name}', '${httpMethod}', '${urlTemplate}', ${textArgName}, ${queryObj});`);
+  } else {
+    lines.push(`        const result = await api._call('${method.name}', '${httpMethod}', '${urlTemplate}', ${idCount}${callArgStr});`);
+  }
   lines.push(`        ctx.output(result);`);
   lines.push(`      } catch (error: unknown) {`);
   lines.push(`        ctx.handleError(error);`);

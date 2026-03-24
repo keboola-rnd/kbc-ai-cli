@@ -43,6 +43,10 @@ export type MethodDef = {
   urlTemplate: string;
   /** Number of positional ID args consumed from args[] into URL path */
   idCount: number;
+  /** If set, the first non-ID positional arg is sent as plain text body (Content-Type: text/plain)
+   *  and remaining options are sent as query params instead of JSON body.
+   *  The value names the arg field that holds the text body. */
+  textBody?: string;
 };
 
 export type SubGroupDef = {
@@ -1294,6 +1298,7 @@ const encryption: ServiceDef = {
       httpMethod: 'POST',
       urlTemplate: '/encrypt',
       idCount: 0,
+      textBody: 'value',
       args: [{ name: 'value', description: 'Value to encrypt', required: true, type: 'string' }],
       options: [
         { name: 'project-id', description: 'Project ID', type: 'string' },

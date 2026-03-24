@@ -73,6 +73,13 @@ function createServiceProxy(
           return genericApiCall(baseUrl, token, methodName, httpMethod, urlTemplate, idCount, args);
         };
       }
+      // _callText(methodName, httpMethod, urlTemplate, textBody, queryParams?)
+      // For endpoints that expect text/plain body with query params (e.g. encryption encrypt).
+      if (prop === '_callText') {
+        return (methodName: string, httpMethod: string, urlTemplate: string, textBody: string, queryParams?: Record<string, unknown>) => {
+          return textApiCall(baseUrl, token, httpMethod, urlTemplate, textBody, queryParams);
+        };
+      }
       // Sub-group access: return a nested proxy with its own _call
       if (subGroupNames && subGroupNames.includes(prop)) {
         return createServiceProxy(baseUrl, token);
@@ -139,6 +146,54 @@ async function genericApiCall(
 }
 
 /**
+ * For endpoints that expect text/plain body with query params (e.g. encryption encrypt).
+ * The text value is sent as-is in the body, and remaining options become URL query params.
+ */
+async function textApiCall(
+  baseUrl: string,
+  token: string,
+  httpMethod: string,
+  urlTemplate: string,
+  textBody: string,
+  queryParams?: Record<string, unknown>,
+): Promise<unknown> {
+  const params = new URLSearchParams();
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined && value !== null) {
+        params.set(key, String(value));
+      }
+    }
+  }
+  const qs = params.toString();
+  const fullUrl = qs
+    ? baseUrl + urlTemplate + '?' + qs
+    : baseUrl + urlTemplate;
+
+  const response = await fetch(fullUrl, {
+    method: httpMethod,
+    headers: {
+      'Content-Type': 'text/plain',
+      [STORAGE_API_TOKEN_HEADER]: token,
+    },
+    body: textBody,
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`API Error (${response.status}): ${errorBody}`);
+  }
+
+  // Try to parse as JSON, fall back to text
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+/**
  * Build REST path from the urlTemplate and idCount passed by generated commands.
  * Templates use {0}, {1}, ... for positional ID args and {branchId} etc. for named placeholders.
  * No hand-maintained lookup table — every generated command carries its own template.
@@ -172,38 +227,55 @@ function buildPathFromMethod(
     ? lastArg as Record<string, unknown>
     : {};
 
-  // Replace named placeholders like {branchId}, {workspaceId} from options
+  // Replace named placeholders like {branchId}, {workspaceId} from options.
+  // Track consumed keys so we can strip them from body/query later.
+  const consumedKeys = new Set<string>();
   if (template.includes('{branchId}')) {
     const branchId = (opts['branchId'] as string) ?? 'default';
     template = template.replace('{branchId}', branchId);
+    consumedKeys.add('branchId');
   }
   if (template.includes('{workspaceId}')) {
     const workspaceId = (opts['workspaceId'] as string) ?? '';
     template = template.replace('{workspaceId}', workspaceId);
+    consumedKeys.add('workspaceId');
+  }
+  // Also handle {feature} placeholder used by management methods
+  if (template.includes('{feature}')) {
+    const feature = (opts['feature'] as string) ?? '';
+    template = template.replace('{feature}', feature);
+    consumedKeys.add('feature');
+  }
+  // Also handle {userId} placeholder
+  if (template.includes('{userId}')) {
+    const userId = (opts['userId'] as string) ?? '';
+    template = template.replace('{userId}', userId);
+    consumedKeys.add('userId');
+  }
+
+  // Build a clean opts object without consumed placeholder keys
+  const cleanOpts: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(opts)) {
+    if (!consumedKeys.has(key) && value !== undefined && value !== null) {
+      cleanOpts[key] = value;
+    }
   }
 
   let bodyStr: string | undefined;
   let queryString: string | undefined;
+  const hasCleanOpts = Object.keys(cleanOpts).length > 0;
 
-  if (isWriteMethod(httpMethod)) {
-    // POST/PATCH/PUT — serialize object as JSON body
-    if (opts && Object.keys(opts).length > 0) {
-      bodyStr = JSON.stringify(opts);
-    }
-  } else if (httpMethod === 'DELETE') {
-    // DELETE — some APIs use body, some use query params.
-    // Send as body (most common for Keboola APIs).
-    if (opts && Object.keys(opts).length > 0) {
-      bodyStr = JSON.stringify(opts);
+  if (isWriteMethod(httpMethod) || httpMethod === 'DELETE') {
+    // POST/PATCH/PUT/DELETE — serialize as JSON body
+    if (hasCleanOpts) {
+      bodyStr = JSON.stringify(cleanOpts);
     }
   } else {
     // GET and other read methods — serialize as query string
-    if (opts && Object.keys(opts).length > 0) {
+    if (hasCleanOpts) {
       const params = new URLSearchParams();
-      for (const [key, value] of Object.entries(opts)) {
-        if (value !== undefined && value !== null && key !== 'branchId' && key !== 'workspaceId') {
-          params.set(key, String(value));
-        }
+      for (const [key, value] of Object.entries(cleanOpts)) {
+        params.set(key, String(value));
       }
       const qs = params.toString();
       if (qs) queryString = qs;
