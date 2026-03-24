@@ -9,7 +9,7 @@ import { registerAppOpen } from './open';
 import { registerAppDelete } from './delete';
 
 export function registerAppCommands(program: Command): void {
-  const appCmd = program.command('app').description('Manage Data Apps');
+  const appCmd = program.command('data-app').description('Manage Data Apps');
   registerAppList(appCmd);
   registerAppInfo(appCmd);
   registerAppDeploy(appCmd);

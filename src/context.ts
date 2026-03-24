@@ -372,6 +372,11 @@ export class CliContext {
     return createServiceProxy(url, this.token);
   }
 
+  async telemetryApi(): Promise<Record<string, unknown>> {
+    const url = await this.getServiceUrl('telemetry');
+    return createServiceProxy(url, this.token, ['provisioning']);
+  }
+
   async genericServiceApi(serviceId: string): Promise<Record<string, unknown>> {
     const url = await this.getServiceUrl(serviceId);
     return createServiceProxy(url, this.token);

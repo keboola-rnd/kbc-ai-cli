@@ -535,6 +535,69 @@ const storage: ServiceDef = {
             { name: 'change-description', description: 'Change description', type: 'string' },
           ],
         },
+        {
+          name: 'deleteConfigurations',
+          cliName: 'delete-batch',
+          description: 'Delete multiple configurations (batch)',
+          httpMethod: 'DELETE',
+          urlTemplate: '/branch/{branchId}/components/{0}/configs',
+          idCount: 1,
+          args: [
+            { name: 'componentId', description: 'Component ID', required: true, type: 'string' },
+          ],
+          options: [
+            { name: 'data', description: 'JSON with configIds array', type: 'json', required: true },
+            { name: 'branch-id', description: 'Branch ID', type: 'string', defaultValue: 'default' },
+          ],
+        },
+        {
+          name: 'createConfigurationRows',
+          cliName: 'create-rows',
+          description: 'Create multiple configuration rows (batch, sequential)',
+          httpMethod: 'POST',
+          urlTemplate: '/branch/{branchId}/components/{0}/configs/{1}/rows',
+          idCount: 2,
+          args: [
+            { name: 'componentId', description: 'Component ID', required: true, type: 'string' },
+            { name: 'configId', description: 'Configuration ID', required: true, type: 'string' },
+          ],
+          options: [
+            { name: 'data', description: 'JSON with array of row definitions', type: 'json', required: true },
+            { name: 'branch-id', description: 'Branch ID', type: 'string', defaultValue: 'default' },
+          ],
+        },
+        {
+          name: 'deleteConfigurationRows',
+          cliName: 'delete-rows',
+          description: 'Delete multiple configuration rows (batch)',
+          httpMethod: 'DELETE',
+          urlTemplate: '/branch/{branchId}/components/{0}/configs/{1}/rows',
+          idCount: 2,
+          args: [
+            { name: 'componentId', description: 'Component ID', required: true, type: 'string' },
+            { name: 'configId', description: 'Configuration ID', required: true, type: 'string' },
+          ],
+          options: [
+            { name: 'data', description: 'JSON with rowIds array and optional changeDescription', type: 'json', required: true },
+            { name: 'branch-id', description: 'Branch ID', type: 'string', defaultValue: 'default' },
+          ],
+        },
+        {
+          name: 'createConfigurationWorkspaceJob',
+          cliName: 'create-workspace-job',
+          description: 'Create a workspace for a configuration (async job)',
+          httpMethod: 'POST',
+          urlTemplate: '/branch/{branchId}/components/{0}/configs/{1}/workspaces',
+          idCount: 2,
+          args: [
+            { name: 'componentId', description: 'Component ID', required: true, type: 'string' },
+            { name: 'configId', description: 'Configuration ID', required: true, type: 'string' },
+          ],
+          options: [
+            { name: 'data', description: 'Workspace config as JSON (async=true)', type: 'json', required: true },
+            { name: 'branch-id', description: 'Branch ID', type: 'string', defaultValue: 'default' },
+          ],
+        },
       ],
     },
     {
@@ -754,6 +817,32 @@ const storage: ServiceDef = {
           description: 'Get SAML2 login URL for a workspace',
           httpMethod: 'GET',
           urlTemplate: '/branch/{branchId}/workspaces/{workspaceId}/saml2-login',
+          idCount: 0,
+          args: [],
+          options: [
+            { name: 'branch-id', description: 'Branch ID', type: 'string', required: true },
+            { name: 'workspace-id', description: 'Workspace ID', type: 'string', required: true },
+          ],
+        },
+        {
+          name: 'deleteWorkspaces',
+          cliName: 'delete-batch',
+          description: 'Delete multiple workspaces (batch)',
+          httpMethod: 'DELETE',
+          urlTemplate: '/branch/{branchId}/workspaces',
+          idCount: 0,
+          args: [],
+          options: [
+            { name: 'branch-id', description: 'Branch ID', type: 'string', required: true },
+            { name: 'data', description: 'JSON with workspaceIds array', type: 'json', required: true },
+          ],
+        },
+        {
+          name: 'deleteWorkspaceJob',
+          cliName: 'delete-job',
+          description: 'Delete a workspace (async job)',
+          httpMethod: 'DELETE',
+          urlTemplate: '/branch/{branchId}/workspaces/{workspaceId}',
           idCount: 0,
           args: [],
           options: [
@@ -1842,6 +1931,38 @@ const assets: ServiceDef = {
   subGroups: [],
 };
 
+// ─── Telemetry ────────────────────────────────────────────────────────
+const telemetry: ServiceDef = {
+  name: 'telemetry',
+  cliName: 'telemetry',
+  description: 'Telemetry API — provisioning and workspace credentials',
+  factoryFn: 'createTelemetryClient',
+  sourceDir: 'telemetry',
+  clientFile: 'telemetryClient.ts',
+  requiresAuth: true,
+  methods: [],
+  subGroups: [
+    {
+      name: 'provisioning',
+      cliName: 'provisioning',
+      description: 'Telemetry provisioning operations',
+      sourceFile: 'provisioning/provisioning.ts',
+      methods: [
+        {
+          name: 'createCredentials',
+          cliName: 'create-credentials',
+          description: 'Create telemetry workspace credentials',
+          httpMethod: 'POST',
+          urlTemplate: '/provisioning/workspace',
+          idCount: 0,
+          args: [],
+          options: [{ name: 'data', description: 'Credentials request as JSON', type: 'json', required: true }],
+        },
+      ],
+    },
+  ],
+};
+
 // ─── Complete Registry ─────────────────────────────────────────────────
 export const API_REGISTRY: ServiceDef[] = [
   dataScience,
@@ -1859,6 +1980,7 @@ export const API_REGISTRY: ServiceDef[] = [
   syncActions,
   status,
   assets,
+  telemetry,
 ];
 
 /** Count total methods across all services */

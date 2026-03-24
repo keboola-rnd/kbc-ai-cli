@@ -39,6 +39,10 @@ export const ATOMIC_METHODS: AtomicMethod[] = [
   { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'createConfigurationWorkspace', cliPath: 'storage configs create-workspace' },
   { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'createConfigurationRow', cliPath: 'storage configs create-row' },
   { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'deleteConfigurationRow', cliPath: 'storage configs delete-row' },
+  { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'deleteConfigurations', cliPath: 'storage configs delete-batch' },
+  { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'createConfigurationRows', cliPath: 'storage configs create-rows' },
+  { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'deleteConfigurationRows', cliPath: 'storage configs delete-rows' },
+  { service: 'storage', subGroup: 'componentsAndConfigurations', method: 'createConfigurationWorkspaceJob', cliPath: 'storage configs create-workspace-job' },
   { service: 'storage', subGroup: 'branches', method: 'getDevBranches', cliPath: 'storage branches list' },
   { service: 'storage', subGroup: 'branches', method: 'createDevBranchJob', cliPath: 'storage branches create' },
   { service: 'storage', subGroup: 'branches', method: 'updateDevBranch', cliPath: 'storage branches update' },
@@ -56,6 +60,8 @@ export const ATOMIC_METHODS: AtomicMethod[] = [
   { service: 'storage', subGroup: 'workspaces', method: 'resetWorkspacePassword', cliPath: 'storage workspaces reset-password' },
   { service: 'storage', subGroup: 'workspaces', method: 'setWorkspacePublicKey', cliPath: 'storage workspaces set-public-key' },
   { service: 'storage', subGroup: 'workspaces', method: 'getWorkspaceSaml2Login', cliPath: 'storage workspaces saml2-login' },
+  { service: 'storage', subGroup: 'workspaces', method: 'deleteWorkspaces', cliPath: 'storage workspaces delete-batch' },
+  { service: 'storage', subGroup: 'workspaces', method: 'deleteWorkspaceJob', cliPath: 'storage workspaces delete-job' },
   { service: 'storage', subGroup: 'tokens', method: 'verify', cliPath: 'storage tokens verify' },
   { service: 'storage', subGroup: 'mergeRequests', method: 'getMergeRequests', cliPath: 'storage merge-requests list' },
   { service: 'vault', subGroup: null, method: 'getVariables', cliPath: 'vault list' },
@@ -133,9 +139,10 @@ export const ATOMIC_METHODS: AtomicMethod[] = [
   { service: 'sync-actions', subGroup: 'gitRepository', method: 'getPrivateGitRepository', cliPath: 'sync-actions git-repo private' },
   { service: 'status', subGroup: null, method: 'getSummary', cliPath: 'status summary' },
   { service: 'assets', subGroup: null, method: 'getPublishedChangelogPosts', cliPath: 'assets changelog' },
+  { service: 'telemetry', subGroup: 'provisioning', method: 'createCredentials', cliPath: 'telemetry provisioning create-credentials' },
 ];
 
 export const METHOD_MAP = new Map(ATOMIC_METHODS.map((m) => [`${m.service}.${m.subGroup ? m.subGroup + '.' : ''}${m.method}`, m]));
 
-/** Total atomic methods: 129 */
-export const TOTAL_METHODS = 129;
+/** Total atomic methods: 136 */
+export const TOTAL_METHODS = 136;

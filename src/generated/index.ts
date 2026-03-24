@@ -19,6 +19,7 @@ import { registerMetastoreCommands } from './metastore';
 import { registerSyncActionsCommands } from './sync-actions';
 import { registerStatusCommands } from './status';
 import { registerAssetsCommands } from './assets';
+import { registerTelemetryCommands } from './telemetry';
 
 export function registerAllGeneratedCommands(program: Command, ctx: CliContext) {
   registerDataScienceCommands(program, ctx);
@@ -36,4 +37,5 @@ export function registerAllGeneratedCommands(program: Command, ctx: CliContext) 
   registerSyncActionsCommands(program, ctx);
   registerStatusCommands(program, ctx);
   registerAssetsCommands(program, ctx);
+  registerTelemetryCommands(program, ctx);
 }

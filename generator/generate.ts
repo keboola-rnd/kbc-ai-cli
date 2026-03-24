@@ -160,6 +160,7 @@ function getApiCall(service: ServiceDef): string {
     'sync-actions': 'ctx.syncActionsApi()',
     'status': 'ctx.statusApi()',
     'assets': 'ctx.assetsApi()',
+    'telemetry': 'ctx.telemetryApi()',
   };
   return map[service.name] ?? `ctx.genericServiceApi('${service.name}')`;
 }

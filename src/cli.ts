@@ -4,7 +4,8 @@ import { APP_NAME, APP_VERSION } from './constants';
 import { CliContext } from './context';
 import { registerAuth } from './commands/auth';
 import { registerUse } from './commands/use';
-import { registerAppCommands } from './commands/app/index';
+import { registerAppCommands } from './commands/data-app/index';
+import { registerComponentCommands } from './commands/component/index';
 import { registerConfigCommands } from './commands/config/index';
 import { registerSecretsCommands } from './commands/secrets/index';
 import { registerRunsCommands } from './commands/runs/index';
@@ -22,6 +23,7 @@ program
 registerAuth(program);
 registerUse(program);
 registerAppCommands(program);
+registerComponentCommands(program);
 registerConfigCommands(program);
 registerSecretsCommands(program);
 registerRunsCommands(program);

@@ -348,6 +348,70 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       }
     });
 
+  group_componentsAndConfigurations.command('delete-batch <component-id>')
+    .description('Delete multiple configurations (batch) [DELETE]')
+    .option('--data <value>', 'JSON with configIds array (required)')
+    .option('--branch-id <value>', 'Branch ID')
+    .option('--json', 'Output raw JSON')
+    .action(async (componentId, opts) => {
+      try {
+        const api: any = ctx.storageApi().componentsAndConfigurations;
+        const bodyData = opts.data ? JSON.parse(opts.data) : {};
+        const result = await api._call('deleteConfigurations', 'DELETE', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branch-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
+  group_componentsAndConfigurations.command('create-rows <component-id> <config-id>')
+    .description('Create multiple configuration rows (batch, sequential) [POST]')
+    .option('--data <value>', 'JSON with array of row definitions (required)')
+    .option('--branch-id <value>', 'Branch ID')
+    .option('--json', 'Output raw JSON')
+    .action(async (componentId, configId, opts) => {
+      try {
+        const api: any = ctx.storageApi().componentsAndConfigurations;
+        const bodyData = opts.data ? JSON.parse(opts.data) : {};
+        const result = await api._call('createConfigurationRows', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
+  group_componentsAndConfigurations.command('delete-rows <component-id> <config-id>')
+    .description('Delete multiple configuration rows (batch) [DELETE]')
+    .option('--data <value>', 'JSON with rowIds array and optional changeDescription (required)')
+    .option('--branch-id <value>', 'Branch ID')
+    .option('--json', 'Output raw JSON')
+    .action(async (componentId, configId, opts) => {
+      try {
+        const api: any = ctx.storageApi().componentsAndConfigurations;
+        const bodyData = opts.data ? JSON.parse(opts.data) : {};
+        const result = await api._call('deleteConfigurationRows', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
+  group_componentsAndConfigurations.command('create-workspace-job <component-id> <config-id>')
+    .description('Create a workspace for a configuration (async job) [POST]')
+    .option('--data <value>', 'Workspace config as JSON (async=true) (required)')
+    .option('--branch-id <value>', 'Branch ID')
+    .option('--json', 'Output raw JSON')
+    .action(async (componentId, configId, opts) => {
+      try {
+        const api: any = ctx.storageApi().componentsAndConfigurations;
+        const bodyData = opts.data ? JSON.parse(opts.data) : {};
+        const result = await api._call('createConfigurationWorkspaceJob', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
   const group_branches = service.command('branches').description('Branch operations');
 
   group_branches.command('list')
@@ -588,6 +652,37 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().workspaces;
         const result = await api._call('getWorkspaceSaml2Login', 'GET', '/branch/{branchId}/workspaces/{workspaceId}/saml2-login', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
+  group_workspaces.command('delete-batch')
+    .description('Delete multiple workspaces (batch) [DELETE]')
+    .option('--branch-id <value>', 'Branch ID (required)')
+    .option('--data <value>', 'JSON with workspaceIds array (required)')
+    .option('--json', 'Output raw JSON')
+    .action(async (opts) => {
+      try {
+        const api: any = ctx.storageApi().workspaces;
+        const bodyData = opts.data ? JSON.parse(opts.data) : {};
+        const result = await api._call('deleteWorkspaces', 'DELETE', '/branch/{branchId}/workspaces', 0, { ...bodyData, branchId: opts['branch-id'] });
+        ctx.output(result);
+      } catch (error: unknown) {
+        ctx.handleError(error);
+      }
+    });
+
+  group_workspaces.command('delete-job')
+    .description('Delete a workspace (async job) [DELETE]')
+    .option('--branch-id <value>', 'Branch ID (required)')
+    .option('--workspace-id <value>', 'Workspace ID (required)')
+    .option('--json', 'Output raw JSON')
+    .action(async (opts) => {
+      try {
+        const api: any = ctx.storageApi().workspaces;
+        const result = await api._call('deleteWorkspaceJob', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
