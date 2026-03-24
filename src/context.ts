@@ -62,6 +62,10 @@ function createServiceProxy(
 ): Record<string, unknown> {
   return new Proxy({} as Record<string, unknown>, {
     get(_target, prop: string) {
+      // Prevent the proxy from being treated as a thenable when awaited.
+      // Without this, `await ctx.dataScienceApi()` would hang forever because
+      // JS checks `proxy.then` and our catch-all handler returns a function.
+      if (prop === 'then') return undefined;
       // _call(methodName, httpMethod, urlTemplate, idCount, ...args)
       // Generated commands pass URL template + idCount explicitly.
       if (prop === '_call') {
