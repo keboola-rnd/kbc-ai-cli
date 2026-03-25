@@ -14,7 +14,7 @@ export function registerVaultCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api._call('getVariables', 'GET', '/variables', 0, { configId: opts['config-id'] });
+        const result = await api._call('getVariables', 'GET', '/variables', 0, { configId: opts['configId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

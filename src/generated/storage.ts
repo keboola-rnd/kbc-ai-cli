@@ -191,7 +191,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branch-id'], type: opts['type'], include: opts['include'] });
+        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branchId'], type: opts['type'], include: opts['include'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -205,7 +205,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponent', 'GET', '/branch/{branchId}/components/{0}', 1, componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getComponent', 'GET', '/branch/{branchId}/components/{0}', 1, componentId, { branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -219,7 +219,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, componentId, { branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -233,7 +233,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -249,7 +249,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfiguration', 'POST', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfiguration', 'POST', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -263,7 +263,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfiguration', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('deleteConfiguration', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -280,7 +280,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('searchComponentConfigurations', 'GET', '/branch/{branchId}/search/component-configurations', 0, { branchId: opts['branch-id'], componentId: opts['component-id'], configId: opts['config-id'], query: opts['query'] });
+        const result = await api._call('searchComponentConfigurations', 'GET', '/branch/{branchId}/search/component-configurations', 0, { branchId: opts['branchId'], componentId: opts['componentId'], configId: opts['configId'], query: opts['query'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -294,7 +294,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurationWorkspaces', 'GET', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurationWorkspaces', 'GET', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -310,7 +310,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationWorkspace', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationWorkspace', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -326,7 +326,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationRow', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationRow', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -341,7 +341,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, rowId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfigurationRow', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', 3, componentId, configId, rowId, { branchId: opts['branch-id'], changeDescription: opts['change-description'] });
+        const result = await api._call('deleteConfigurationRow', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', 3, componentId, configId, rowId, { branchId: opts['branchId'], changeDescription: opts['changeDescription'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -357,7 +357,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('deleteConfigurations', 'DELETE', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('deleteConfigurations', 'DELETE', '/branch/{branchId}/components/{0}/configs', 1, componentId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -373,7 +373,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationRows', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationRows', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -389,7 +389,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('deleteConfigurationRows', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('deleteConfigurationRows', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -405,7 +405,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('createConfigurationWorkspaceJob', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationWorkspaceJob', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/workspaces', 2, componentId, configId, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -591,7 +591,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -606,7 +606,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -621,7 +621,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('resetWorkspacePassword', 'POST', '/branch/{branchId}/workspaces/{workspaceId}/password', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('resetWorkspacePassword', 'POST', '/branch/{branchId}/workspaces/{workspaceId}/password', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -636,7 +636,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('setWorkspacePublicKey', 'POST', '/workspaces/{workspaceId}/public-key', 0, { workspaceId: opts['workspace-id'], publicKey: opts['public-key'] });
+        const result = await api._call('setWorkspacePublicKey', 'POST', '/workspaces/{workspaceId}/public-key', 0, { workspaceId: opts['workspaceId'], publicKey: opts['publicKey'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -651,7 +651,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspaceSaml2Login', 'GET', '/branch/{branchId}/workspaces/{workspaceId}/saml2-login', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('getWorkspaceSaml2Login', 'GET', '/branch/{branchId}/workspaces/{workspaceId}/saml2-login', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -667,7 +667,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = ctx.storageApi().workspaces;
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('deleteWorkspaces', 'DELETE', '/branch/{branchId}/workspaces', 0, { ...bodyData, branchId: opts['branch-id'] });
+        const result = await api._call('deleteWorkspaces', 'DELETE', '/branch/{branchId}/workspaces', 0, { ...bodyData, branchId: opts['branchId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -682,7 +682,7 @@ export function registerStorageCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('deleteWorkspaceJob', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('deleteWorkspaceJob', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

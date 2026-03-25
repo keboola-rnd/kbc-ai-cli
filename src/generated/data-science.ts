@@ -16,7 +16,7 @@ export function registerDataScienceCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.dataScienceApi();
-        const result = await api._call('getApps', 'GET', '/apps', 0, { componentId: opts['component-id'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
+        const result = await api._call('getApps', 'GET', '/apps', 0, { componentId: opts['componentId'], limit: opts['limit'] !== undefined ? Number(opts['limit']) : undefined, offset: opts['offset'] !== undefined ? Number(opts['offset']) : undefined });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

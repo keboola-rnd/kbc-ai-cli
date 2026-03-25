@@ -15,7 +15,7 @@ export function registerTransformationUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branch-id'], componentType: "transformation" });
+        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branchId'], componentType: "transformation" });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const components = Array.isArray(result) ? result : [];
         const items: any[] = [];

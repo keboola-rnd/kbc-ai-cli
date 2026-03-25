@@ -15,7 +15,7 @@ export function registerFlowUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, "keboola.orchestrator", { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, "keboola.orchestrator", { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No flows found.'); return; }
@@ -33,7 +33,7 @@ export function registerFlowUnit(parent: Command, ctx: CliContext) {
     .action(async (flowId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, "keboola.orchestrator", flowId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, "keboola.orchestrator", flowId, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

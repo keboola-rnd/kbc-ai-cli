@@ -21,7 +21,7 @@ export function registerJobUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.queueApi();
-        const result = await api._call('searchJobs', 'GET', '/search/jobs', 0, { status: opts['status'], component: opts['component'], config: opts['config'], limit: opts['limit'], offset: opts['offset'], sortBy: opts['sort-by'], sortOrder: opts['sort-order'] });
+        const result = await api._call('searchJobs', 'GET', '/search/jobs', 0, { status: opts['status'], component: opts['component'], config: opts['config'], limit: opts['limit'], offset: opts['offset'], sortBy: opts['sortBy'], sortOrder: opts['sortOrder'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No jobs found.'); return; }

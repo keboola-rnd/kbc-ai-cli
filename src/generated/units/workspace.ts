@@ -15,7 +15,7 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspaces', 'GET', '/branch/{branchId}/workspaces', 0, { branchId: opts['branch-id'] });
+        const result = await api._call('getWorkspaces', 'GET', '/branch/{branchId}/workspaces', 0, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No workspaces found.'); return; }
@@ -34,7 +34,7 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -50,7 +50,7 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
+        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branchId'], workspaceId: opts['workspaceId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

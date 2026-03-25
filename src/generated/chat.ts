@@ -70,7 +70,7 @@ export function registerChatCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.chatApi();
-        const result = await api._call('getVotes', 'GET', '/vote', 0, { chatId: opts['chat-id'] });
+        const result = await api._call('getVotes', 'GET', '/vote', 0, { chatId: opts['chatId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

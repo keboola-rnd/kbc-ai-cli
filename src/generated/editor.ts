@@ -42,7 +42,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSessions', 'GET', '/sql/sessions', 0, { workspaceId: opts['workspace-id'] });
+        const result = await api._call('getSessions', 'GET', '/sql/sessions', 0, { workspaceId: opts['workspaceId'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -57,7 +57,7 @@ export function registerEditorCommands(parent: Command, ctx: CliContext) {
     .action(async (sessionId, opts) => {
       try {
         const api: any = await ctx.editorApi();
-        const result = await api._call('getSessionSchema', 'GET', '/sql/sessions/{0}/schema', 1, sessionId, { onlyWorkspaceSchema: opts['only-workspace-schema'], loadTables: opts['load-tables'] });
+        const result = await api._call('getSessionSchema', 'GET', '/sql/sessions/{0}/schema', 1, sessionId, { onlyWorkspaceSchema: opts['onlyWorkspaceSchema'], loadTables: opts['loadTables'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

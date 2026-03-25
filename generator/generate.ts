@@ -258,8 +258,8 @@ function buildCallArgs(method: MethodDef): { preamble: string; callArgs: string 
   const optEntries = nonDataOpts.map((o) => {
     const cn = kebabToCamel(o.name);
     return o.type === 'number'
-      ? `${cn}: opts['${o.name}'] !== undefined ? Number(opts['${o.name}']) : undefined`
-      : `${cn}: opts['${o.name}']`;
+      ? `${cn}: opts['${cn}'] !== undefined ? Number(opts['${cn}']) : undefined`
+      : `${cn}: opts['${cn}']`;
   });
 
   if (hasJsonData) {
@@ -330,7 +330,7 @@ function generateCommand(
     const textArgName = method.textBody;
     const queryOpts = method.options.map((o) => {
       const cn = kebabToCamel(o.name);
-      return `${cn}: opts['${o.name}']`;
+      return `${cn}: opts['${cn}']`;
     });
     const queryObj = queryOpts.length > 0 ? `{ ${queryOpts.join(', ')} }` : 'undefined';
     lines.push(`        const result = await api._callText('${method.name}', '${httpMethod}', '${urlTemplate}', ${textArgName}, ${queryObj});`);
@@ -537,7 +537,7 @@ function generateUnitCommand(cmd: UnitCommandDef): string {
     const optEntries: string[] = [];
     for (const opt of cmd.options) {
       const cn = kebabToCamel(opt.name);
-      optEntries.push(`${cn}: opts['${opt.name}']`);
+      optEntries.push(`${cn}: opts['${cn}']`);
     }
     if (cmd.queryDefaults) {
       for (const [key, value] of Object.entries(cmd.queryDefaults)) {

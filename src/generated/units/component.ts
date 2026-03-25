@@ -16,7 +16,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branch-id'], type: opts['type'] });
+        const result = await api._call('getComponents', 'GET', '/branch/{branchId}/components', 0, { branchId: opts['branchId'], type: opts['type'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const components = Array.isArray(result) ? result : [];
         const items: any[] = [];
@@ -41,7 +41,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getComponent', 'GET', '/branch/{branchId}/components/{0}', 1, componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getComponent', 'GET', '/branch/{branchId}/components/{0}', 1, componentId, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -56,7 +56,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, componentId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfigurations', 'GET', '/branch/{branchId}/components/{0}/configs', 1, componentId, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No configurations found.'); return; }
@@ -74,7 +74,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('getConfiguration', 'GET', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -92,7 +92,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('createConfiguration', 'POST', '/branch/{branchId}/components/{0}/configs', 1, componentId, { name: opts['name'], description: opts['description'], data: opts['data'], branchId: opts['branch-id'] });
+        const result = await api._call('createConfiguration', 'POST', '/branch/{branchId}/components/{0}/configs', 1, componentId, { name: opts['name'], description: opts['description'], data: opts['data'], branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -107,7 +107,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfiguration', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branch-id'] });
+        const result = await api._call('deleteConfiguration', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}', 2, componentId, configId, { branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -125,7 +125,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('searchComponentConfigurations', 'GET', '/branch/{branchId}/search/component-configurations', 0, { branchId: opts['branch-id'], componentId: opts['component-id'], configId: opts['config-id'], query: opts['query'] });
+        const result = await api._call('searchComponentConfigurations', 'GET', '/branch/{branchId}/search/component-configurations', 0, { branchId: opts['branchId'], componentId: opts['componentId'], configId: opts['configId'], query: opts['query'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No configurations found.'); return; }
@@ -144,7 +144,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('createConfigurationRow', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { data: opts['data'], branchId: opts['branch-id'] });
+        const result = await api._call('createConfigurationRow', 'POST', '/branch/{branchId}/components/{0}/configs/{1}/rows', 2, componentId, configId, { data: opts['data'], branchId: opts['branchId'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -160,7 +160,7 @@ export function registerComponentUnit(parent: Command, ctx: CliContext) {
     .action(async (componentId, configId, rowId, opts) => {
       try {
         const api: any = ctx.storageApi().componentsAndConfigurations;
-        const result = await api._call('deleteConfigurationRow', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', 3, componentId, configId, rowId, { branchId: opts['branch-id'], changeDescription: opts['change-description'] });
+        const result = await api._call('deleteConfigurationRow', 'DELETE', '/branch/{branchId}/components/{0}/configs/{1}/rows/{2}', 3, componentId, configId, rowId, { branchId: opts['branchId'], changeDescription: opts['changeDescription'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

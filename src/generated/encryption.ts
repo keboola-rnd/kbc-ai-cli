@@ -16,7 +16,7 @@ export function registerEncryptionCommands(parent: Command, ctx: CliContext) {
     .action(async (value, opts) => {
       try {
         const api: any = await ctx.encryptionApi();
-        const result = await api._callText('encrypt', 'POST', '/encrypt', value, { projectId: opts['project-id'], componentId: opts['component-id'], branchType: opts['branch-type'] });
+        const result = await api._callText('encrypt', 'POST', '/encrypt', value, { projectId: opts['projectId'], componentId: opts['componentId'], branchType: opts['branchType'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
@@ -34,7 +34,7 @@ export function registerEncryptionCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.encryptionApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('encryptSecrets', 'POST', '/encrypt', 0, { ...bodyData, projectId: opts['project-id'], componentId: opts['component-id'], branchType: opts['branch-type'] });
+        const result = await api._call('encryptSecrets', 'POST', '/encrypt', 0, { ...bodyData, projectId: opts['projectId'], componentId: opts['componentId'], branchType: opts['branchType'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

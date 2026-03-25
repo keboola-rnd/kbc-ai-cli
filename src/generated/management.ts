@@ -58,7 +58,7 @@ export function registerManagementCommands(parent: Command, ctx: CliContext) {
     .action(async (projectId, opts) => {
       try {
         const api: any = (await ctx.managementApi()).projects;
-        const result = await api._call('changeProjectUserRole', 'PATCH', '/projects/{0}/users/{userId}', 1, Number(projectId), { userId: opts['user-id'] !== undefined ? Number(opts['user-id']) : undefined, role: opts['role'] });
+        const result = await api._call('changeProjectUserRole', 'PATCH', '/projects/{0}/users/{userId}', 1, Number(projectId), { userId: opts['userId'] !== undefined ? Number(opts['userId']) : undefined, role: opts['role'] });
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);
