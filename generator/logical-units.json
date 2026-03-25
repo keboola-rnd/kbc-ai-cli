@@ -2,6 +2,380 @@
   "$comment": "Layer 2 logical units \u2014 declarative definitions for high-level CLI commands. Each unit groups related operations with table formatting, smart defaults, and domain-specific help. The generator reads this file and produces src/generated/units/*.ts files. atomicRef fields are validated against api-registry to ensure contract integrity.",
   "units": [
     {
+      "name": "component",
+      "description": "Manage components, configurations, and configuration rows",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all components in the project",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getComponents",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "type",
+              "description": "Filter by component type (extractor, writer, transformation, application)",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No components found.",
+            "flatten": "configurations",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 50
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show component details (schema, documentation)",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getComponent",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID (e.g. keboola.ex-db-mysql)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "configs",
+          "description": "List configurations for a component",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfigurations",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No configurations found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 60
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "config-show",
+          "description": "Show configuration details",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfiguration",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-create",
+          "description": "Create a new configuration",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.createConfiguration",
+          "httpMethod": "POST",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "name",
+              "description": "Configuration name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "description",
+              "description": "Configuration description",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "description": "Configuration JSON data",
+              "type": "string"
+            },
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-delete",
+          "description": "Delete a configuration",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.deleteConfiguration",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-search",
+          "description": "Search configurations across all components",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.searchComponentConfigurations",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/search/component-configurations",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "component-id",
+              "description": "Filter by component ID",
+              "type": "string"
+            },
+            {
+              "name": "config-id",
+              "description": "Filter by config ID",
+              "type": "string"
+            },
+            {
+              "name": "query",
+              "description": "Search query",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No configurations found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 50
+              },
+              {
+                "key": "componentId",
+                "label": "Component"
+              }
+            ]
+          }
+        },
+        {
+          "name": "row-create",
+          "description": "Create a configuration row",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.createConfigurationRow",
+          "httpMethod": "POST",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}/rows",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "data",
+              "description": "Row data as JSON",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "row-delete",
+          "description": "Delete a configuration row",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.deleteConfigurationRow",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}/rows/{2}",
+          "idCount": 3,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "rowId",
+              "description": "Row ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "change-description",
+              "description": "Change description",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "job",
       "description": "Manage jobs (run, list, monitor)",
       "commands": [
@@ -815,226 +1189,6 @@
             }
           ],
           "options": []
-        }
-      ]
-    },
-    {
-      "name": "config",
-      "description": "Manage component configurations",
-      "commands": [
-        {
-          "name": "list",
-          "description": "List configurations for a component",
-          "service": "storage",
-          "subGroup": "componentsAndConfigurations",
-          "atomicRef": "storage.componentsAndConfigurations.getConfigurations",
-          "httpMethod": "GET",
-          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "componentId",
-              "description": "Component ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": [
-            {
-              "name": "branch-id",
-              "description": "Branch ID",
-              "type": "string",
-              "defaultValue": "default"
-            }
-          ],
-          "table": {
-            "emptyMessage": "No configurations found.",
-            "columns": [
-              {
-                "key": "id",
-                "label": "ID"
-              },
-              {
-                "key": "name",
-                "label": "Name"
-              },
-              {
-                "key": "description",
-                "label": "Description",
-                "maxWidth": 60
-              },
-              {
-                "key": "version",
-                "label": "Version"
-              },
-              {
-                "key": "created",
-                "label": "Created"
-              }
-            ]
-          }
-        },
-        {
-          "name": "show",
-          "description": "Show configuration details",
-          "service": "storage",
-          "subGroup": "componentsAndConfigurations",
-          "atomicRef": "storage.componentsAndConfigurations.getConfiguration",
-          "httpMethod": "GET",
-          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
-          "idCount": 2,
-          "args": [
-            {
-              "name": "componentId",
-              "description": "Component ID",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "configId",
-              "description": "Configuration ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": [
-            {
-              "name": "branch-id",
-              "description": "Branch ID",
-              "type": "string",
-              "defaultValue": "default"
-            }
-          ]
-        },
-        {
-          "name": "create",
-          "description": "Create a new configuration",
-          "service": "storage",
-          "subGroup": "componentsAndConfigurations",
-          "atomicRef": "storage.componentsAndConfigurations.createConfiguration",
-          "httpMethod": "POST",
-          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "componentId",
-              "description": "Component ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": [
-            {
-              "name": "name",
-              "description": "Configuration name",
-              "type": "string",
-              "required": true
-            },
-            {
-              "name": "description",
-              "description": "Configuration description",
-              "type": "string"
-            },
-            {
-              "name": "data",
-              "description": "Configuration JSON data",
-              "type": "string"
-            },
-            {
-              "name": "branch-id",
-              "description": "Branch ID",
-              "type": "string",
-              "defaultValue": "default"
-            }
-          ]
-        },
-        {
-          "name": "delete",
-          "description": "Delete a configuration",
-          "service": "storage",
-          "subGroup": "componentsAndConfigurations",
-          "atomicRef": "storage.componentsAndConfigurations.deleteConfiguration",
-          "httpMethod": "DELETE",
-          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
-          "idCount": 2,
-          "args": [
-            {
-              "name": "componentId",
-              "description": "Component ID",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "configId",
-              "description": "Configuration ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": [
-            {
-              "name": "branch-id",
-              "description": "Branch ID",
-              "type": "string",
-              "defaultValue": "default"
-            }
-          ]
-        },
-        {
-          "name": "search",
-          "description": "Search configurations across all components",
-          "service": "storage",
-          "subGroup": "componentsAndConfigurations",
-          "atomicRef": "storage.componentsAndConfigurations.searchComponentConfigurations",
-          "httpMethod": "GET",
-          "urlTemplate": "/branch/{branchId}/search/component-configurations",
-          "idCount": 0,
-          "args": [],
-          "options": [
-            {
-              "name": "branch-id",
-              "description": "Branch ID",
-              "type": "string",
-              "defaultValue": "default"
-            },
-            {
-              "name": "component-type",
-              "description": "Filter by component type",
-              "type": "string"
-            },
-            {
-              "name": "configuration-name",
-              "description": "Filter by configuration name",
-              "type": "string"
-            },
-            {
-              "name": "configuration-id",
-              "description": "Filter by configuration ID",
-              "type": "string"
-            }
-          ],
-          "table": {
-            "emptyMessage": "No configurations found.",
-            "columns": [
-              {
-                "key": "id",
-                "label": "ID"
-              },
-              {
-                "key": "name",
-                "label": "Name"
-              },
-              {
-                "key": "description",
-                "label": "Description",
-                "maxWidth": 50
-              },
-              {
-                "key": "componentId",
-                "label": "Component"
-              }
-            ]
-          }
         }
       ]
     },

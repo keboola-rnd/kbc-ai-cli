@@ -239,28 +239,44 @@
         }
       }
     },
-    "unit:config": {
-      "description": "Layer 2 — Manage component configurations",
+    "unit:component": {
+      "description": "Layer 2 — Manage components, configurations, and configuration rows",
       "commands": {
         "list": {
+          "description": "List all components in the project",
+          "atomicDeps": ["storage.componentsAndConfigurations.getComponents"]
+        },
+        "show": {
+          "description": "Show component details (schema, documentation)",
+          "atomicDeps": ["storage.componentsAndConfigurations.getComponent"]
+        },
+        "configs": {
           "description": "List configurations for a component",
           "atomicDeps": ["storage.componentsAndConfigurations.getConfigurations"]
         },
-        "show": {
+        "config-show": {
           "description": "Show configuration details",
           "atomicDeps": ["storage.componentsAndConfigurations.getConfiguration"]
         },
-        "create": {
+        "config-create": {
           "description": "Create a new configuration",
           "atomicDeps": ["storage.componentsAndConfigurations.createConfiguration"]
         },
-        "delete": {
+        "config-delete": {
           "description": "Delete a configuration",
           "atomicDeps": ["storage.componentsAndConfigurations.deleteConfiguration"]
         },
-        "search": {
+        "config-search": {
           "description": "Search configurations across all components",
           "atomicDeps": ["storage.componentsAndConfigurations.searchComponentConfigurations"]
+        },
+        "row-create": {
+          "description": "Create a configuration row",
+          "atomicDeps": ["storage.componentsAndConfigurations.createConfigurationRow"]
+        },
+        "row-delete": {
+          "description": "Delete a configuration row",
+          "atomicDeps": ["storage.componentsAndConfigurations.deleteConfigurationRow"]
         }
       }
     },
