@@ -15,7 +15,6 @@ import { registerBranchUnit } from './branch';
 import { registerTokenUnit } from './token';
 import { registerWorkspaceUnit } from './workspace';
 import { registerFileUnit } from './file';
-import { registerDataAppUnit } from './data-app';
 
 export function registerAllLogicalUnits(program: Command, ctx: CliContext) {
   registerComponentUnit(program, ctx);
@@ -29,9 +28,8 @@ export function registerAllLogicalUnits(program: Command, ctx: CliContext) {
   registerTokenUnit(program, ctx);
   registerWorkspaceUnit(program, ctx);
   registerFileUnit(program, ctx);
-  registerDataAppUnit(program, ctx);
 }
 
-export const UNIT_NAMES = ['component', 'job', 'bucket', 'table', 'flow', 'transformation', 'secret', 'branch', 'token', 'workspace', 'file', 'data-app'] as const;
-export const UNIT_COUNT = 12;
-export const UNIT_COMMAND_COUNT = 39;
+export const UNIT_NAMES = ['component', 'job', 'bucket', 'table', 'flow', 'transformation', 'secret', 'branch', 'token', 'workspace', 'file'] as const;
+export const UNIT_COUNT = 11;
+export const UNIT_COMMAND_COUNT = 33;

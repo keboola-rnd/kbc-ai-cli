@@ -14,7 +14,7 @@ export function registerBranchUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('getDevBranches', 'GET', '/branch', 0);
+        const result = await api._call('getDevBranches', 'GET', '/dev-branches', 0);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No branches found.'); return; }
@@ -33,7 +33,7 @@ export function registerBranchUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('createDevBranchJob', 'POST', '/branch', 0, { name: opts['name'], description: opts['description'] });
+        const result = await api._call('createDevBranchJob', 'POST', '/dev-branches', 0, { name: opts['name'], description: opts['description'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -47,7 +47,7 @@ export function registerBranchUnit(parent: Command, ctx: CliContext) {
     .action(async (branchId, opts) => {
       try {
         const api: any = ctx.storageApi().branches;
-        const result = await api._call('deleteDevBranchJob', 'DELETE', '/branch/{0}', 1, branchId);
+        const result = await api._call('deleteDevBranchJob', 'DELETE', '/dev-branches/{0}', 1, branchId);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

@@ -14,7 +14,7 @@ export function registerBucketUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('getBuckets', 'GET', '/buckets', 0);
+        const result = await api._call('getBuckets', 'GET', '/branch/default/buckets', 0);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No buckets found.'); return; }
@@ -31,7 +31,7 @@ export function registerBucketUnit(parent: Command, ctx: CliContext) {
     .action(async (bucketId, opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('getBucket', 'GET', '/buckets/{0}', 1, bucketId);
+        const result = await api._call('getBucket', 'GET', '/branch/default/buckets/{0}', 1, bucketId);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -49,7 +49,7 @@ export function registerBucketUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('createBucket', 'POST', '/buckets', 0, { name: opts['name'], stage: opts['stage'], backend: opts['backend'], description: opts['description'] });
+        const result = await api._call('createBucket', 'POST', '/branch/default/buckets', 0, { name: opts['name'], stage: opts['stage'], backend: opts['backend'], description: opts['description'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -64,7 +64,7 @@ export function registerBucketUnit(parent: Command, ctx: CliContext) {
     .action(async (bucketId, opts) => {
       try {
         const api: any = ctx.storageApi().buckets;
-        const result = await api._call('deleteBucket', 'DELETE', '/buckets/{0}', 1, bucketId, { force: opts['force'] });
+        const result = await api._call('deleteBucket', 'DELETE', '/branch/default/buckets/{0}', 1, bucketId, { force: opts['force'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

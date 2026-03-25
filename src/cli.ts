@@ -34,9 +34,13 @@ try {
   const ctx = CliContext.fromEnvOrConfig();
   registerAllGeneratedCommands(program, ctx);
   registerAllLogicalUnits(program, ctx);
-} catch {
-  // Auth not configured yet — generated commands will not be available
-  // This is expected when running `kbc auth login` for the first time
+} catch (err: unknown) {
+  // Auth not configured yet — generated commands will not be available.
+  // Only suppress auth-related errors (missing token/url); re-throw unexpected ones.
+  const msg = err instanceof Error ? err.message : String(err);
+  if (!msg.includes('Not authenticated') && !msg.includes('KBC_STORAGE_TOKEN') && !msg.includes('KBC_STORAGE_URL') && !msg.includes('not configured')) {
+    throw err;
+  }
 }
 
 program.parse(process.argv);

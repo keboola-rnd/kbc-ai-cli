@@ -279,35 +279,6 @@
           "atomicDeps": ["storage.componentsAndConfigurations.deleteConfigurationRow"]
         }
       }
-    },
-    "unit:data-app": {
-      "description": "Layer 2 — Manage Data Apps",
-      "commands": {
-        "list": {
-          "description": "List all Data Apps",
-          "atomicDeps": ["data-science.getApps"]
-        },
-        "show": {
-          "description": "Show Data App details",
-          "atomicDeps": ["data-science.getApp"]
-        },
-        "create": {
-          "description": "Create a new Data App",
-          "atomicDeps": ["data-science.createApp"]
-        },
-        "delete": {
-          "description": "Delete a Data App",
-          "atomicDeps": ["data-science.deleteApp"]
-        },
-        "logs": {
-          "description": "Get Data App logs (tail)",
-          "atomicDeps": ["data-science.getAppLogsTail"]
-        },
-        "runs": {
-          "description": "List Data App deployment runs",
-          "atomicDeps": ["data-science.getAppRuns"]
-        }
-      }
     }
   }
 }

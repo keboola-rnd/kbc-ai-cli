@@ -15,7 +15,7 @@ export function registerTableUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getTables', 'GET', '/tables', 0, { bucket: opts['bucket'] });
+        const result = await api._call('getTables', 'GET', '/branch/default/tables', 0, { bucket: opts['bucket'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No tables found.'); return; }
@@ -32,7 +32,7 @@ export function registerTableUnit(parent: Command, ctx: CliContext) {
     .action(async (tableId, opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getTable', 'GET', '/tables/{0}', 1, tableId);
+        const result = await api._call('getTable', 'GET', '/branch/default/tables/{0}', 1, tableId);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -48,7 +48,7 @@ export function registerTableUnit(parent: Command, ctx: CliContext) {
     .action(async (tableId, opts) => {
       try {
         const api: any = ctx.storageApi().tables;
-        const result = await api._call('getDataPreview', 'GET', '/tables/{0}/data-preview', 1, tableId, { limit: opts['limit'], format: opts['format'] });
+        const result = await api._call('getDataPreview', 'GET', '/branch/default/tables/{0}/data-preview', 1, tableId, { limit: opts['limit'], format: opts['format'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

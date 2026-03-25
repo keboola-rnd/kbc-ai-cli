@@ -14,7 +14,7 @@ export function registerSecretUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api._call('getVariables', 'GET', '/secrets', 0);
+        const result = await api._call('getVariables', 'GET', '/variables', 0);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No secrets found.'); return; }
@@ -33,7 +33,7 @@ export function registerSecretUnit(parent: Command, ctx: CliContext) {
     .action(async (opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api._call('createVariable', 'POST', '/secrets', 0, { key: opts['key'], value: opts['value'] });
+        const result = await api._call('createVariable', 'POST', '/variables', 0, { key: opts['key'], value: opts['value'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -47,7 +47,7 @@ export function registerSecretUnit(parent: Command, ctx: CliContext) {
     .action(async (secretId, opts) => {
       try {
         const api: any = await ctx.vaultApi();
-        const result = await api._call('deleteVariable', 'DELETE', '/secrets/{0}', 1, secretId);
+        const result = await api._call('deleteVariable', 'DELETE', '/variables/{0}', 1, secretId);
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

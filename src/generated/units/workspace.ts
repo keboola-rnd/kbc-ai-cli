@@ -10,11 +10,12 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
 
   unit.command('list')
     .description('List all workspaces')
+    .option('--branch-id <value>', 'Branch ID', "default")
     .option('--json', 'Output raw JSON')
     .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspaces', 'GET', '/workspaces', 0);
+        const result = await api._call('getWorkspaces', 'GET', '/branch/{branchId}/workspaces', 0, { branchId: opts['branch-id'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         const items = Array.isArray(result) ? result : [];
         if (items.length === 0) { console.log('No workspaces found.'); return; }
@@ -25,13 +26,15 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
       }
     });
 
-  unit.command('show <workspace-id>')
+  unit.command('show')
     .description('Show workspace details')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
-    .action(async (workspaceId, opts) => {
+    .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('getWorkspace', 'GET', '/workspaces/{0}', 1, workspaceId);
+        const result = await api._call('getWorkspace', 'GET', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {
@@ -39,13 +42,15 @@ export function registerWorkspaceUnit(parent: Command, ctx: CliContext) {
       }
     });
 
-  unit.command('delete <workspace-id>')
+  unit.command('delete')
     .description('Delete a workspace')
+    .requiredOption('--branch-id <value>', 'Branch ID')
+    .requiredOption('--workspace-id <value>', 'Workspace ID')
     .option('--json', 'Output raw JSON')
-    .action(async (workspaceId, opts) => {
+    .action(async (opts) => {
       try {
         const api: any = ctx.storageApi().workspaces;
-        const result = await api._call('deleteWorkspace', 'DELETE', '/workspaces/{0}', 1, workspaceId);
+        const result = await api._call('deleteWorkspace', 'DELETE', '/branch/{branchId}/workspaces/{workspaceId}', 0, { branchId: opts['branch-id'], workspaceId: opts['workspace-id'] });
         if (opts.json) { console.log(JSON.stringify(result, null, 2)); return; }
         console.log(JSON.stringify(result, null, 2));
       } catch (error: unknown) {

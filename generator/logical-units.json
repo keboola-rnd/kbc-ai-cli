@@ -385,7 +385,7 @@
           "service": "queue",
           "atomicRef": "queue.searchJobs",
           "httpMethod": "GET",
-          "urlTemplate": "/jobs",
+          "urlTemplate": "/search/jobs",
           "idCount": 0,
           "args": [],
           "options": [
@@ -493,7 +493,7 @@
           "subGroup": "buckets",
           "atomicRef": "storage.buckets.getBuckets",
           "httpMethod": "GET",
-          "urlTemplate": "/buckets",
+          "urlTemplate": "/branch/default/buckets",
           "idCount": 0,
           "args": [],
           "options": [],
@@ -534,7 +534,7 @@
           "subGroup": "buckets",
           "atomicRef": "storage.buckets.getBucket",
           "httpMethod": "GET",
-          "urlTemplate": "/buckets/{0}",
+          "urlTemplate": "/branch/default/buckets/{0}",
           "idCount": 1,
           "args": [
             {
@@ -553,7 +553,7 @@
           "subGroup": "buckets",
           "atomicRef": "storage.buckets.createBucket",
           "httpMethod": "POST",
-          "urlTemplate": "/buckets",
+          "urlTemplate": "/branch/default/buckets",
           "idCount": 0,
           "args": [],
           "options": [
@@ -588,7 +588,7 @@
           "subGroup": "buckets",
           "atomicRef": "storage.buckets.deleteBucket",
           "httpMethod": "DELETE",
-          "urlTemplate": "/buckets/{0}",
+          "urlTemplate": "/branch/default/buckets/{0}",
           "idCount": 1,
           "args": [
             {
@@ -619,7 +619,7 @@
           "subGroup": "tables",
           "atomicRef": "storage.tables.getTables",
           "httpMethod": "GET",
-          "urlTemplate": "/tables",
+          "urlTemplate": "/branch/default/tables",
           "idCount": 0,
           "args": [],
           "options": [
@@ -666,7 +666,7 @@
           "subGroup": "tables",
           "atomicRef": "storage.tables.getTable",
           "httpMethod": "GET",
-          "urlTemplate": "/tables/{0}",
+          "urlTemplate": "/branch/default/tables/{0}",
           "idCount": 1,
           "args": [
             {
@@ -685,7 +685,7 @@
           "subGroup": "tables",
           "atomicRef": "storage.tables.getDataPreview",
           "httpMethod": "GET",
-          "urlTemplate": "/tables/{0}/data-preview",
+          "urlTemplate": "/branch/default/tables/{0}/data-preview",
           "idCount": 1,
           "args": [
             {
@@ -859,7 +859,7 @@
           "service": "vault",
           "atomicRef": "vault.getVariables",
           "httpMethod": "GET",
-          "urlTemplate": "/secrets",
+          "urlTemplate": "/variables",
           "idCount": 0,
           "args": [],
           "options": [],
@@ -891,7 +891,7 @@
           "service": "vault",
           "atomicRef": "vault.createVariable",
           "httpMethod": "POST",
-          "urlTemplate": "/secrets",
+          "urlTemplate": "/variables",
           "idCount": 0,
           "args": [],
           "options": [
@@ -915,7 +915,7 @@
           "service": "vault",
           "atomicRef": "vault.deleteVariable",
           "httpMethod": "DELETE",
-          "urlTemplate": "/secrets/{0}",
+          "urlTemplate": "/variables/{0}",
           "idCount": 1,
           "args": [
             {
@@ -940,7 +940,7 @@
           "subGroup": "branches",
           "atomicRef": "storage.branches.getDevBranches",
           "httpMethod": "GET",
-          "urlTemplate": "/branch",
+          "urlTemplate": "/dev-branches",
           "idCount": 0,
           "args": [],
           "options": [],
@@ -973,7 +973,7 @@
           "subGroup": "branches",
           "atomicRef": "storage.branches.createDevBranchJob",
           "httpMethod": "POST",
-          "urlTemplate": "/branch",
+          "urlTemplate": "/dev-branches",
           "idCount": 0,
           "args": [],
           "options": [
@@ -997,7 +997,7 @@
           "subGroup": "branches",
           "atomicRef": "storage.branches.deleteDevBranchJob",
           "httpMethod": "DELETE",
-          "urlTemplate": "/branch/{0}",
+          "urlTemplate": "/dev-branches/{0}",
           "idCount": 1,
           "args": [
             {
@@ -1040,10 +1040,17 @@
           "subGroup": "workspaces",
           "atomicRef": "storage.workspaces.getWorkspaces",
           "httpMethod": "GET",
-          "urlTemplate": "/workspaces",
+          "urlTemplate": "/branch/{branchId}/workspaces",
           "idCount": 0,
           "args": [],
-          "options": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
           "table": {
             "emptyMessage": "No workspaces found.",
             "columns": [
@@ -1081,17 +1088,23 @@
           "subGroup": "workspaces",
           "atomicRef": "storage.workspaces.getWorkspace",
           "httpMethod": "GET",
-          "urlTemplate": "/workspaces/{0}",
-          "idCount": 1,
-          "args": [
+          "urlTemplate": "/branch/{branchId}/workspaces/{workspaceId}",
+          "idCount": 0,
+          "args": [],
+          "options": [
             {
-              "name": "workspaceId",
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "workspace-id",
               "description": "Workspace ID",
-              "required": true,
-              "type": "string"
+              "type": "string",
+              "required": true
             }
-          ],
-          "options": []
+          ]
         },
         {
           "name": "delete",
@@ -1100,17 +1113,23 @@
           "subGroup": "workspaces",
           "atomicRef": "storage.workspaces.deleteWorkspace",
           "httpMethod": "DELETE",
-          "urlTemplate": "/workspaces/{0}",
-          "idCount": 1,
-          "args": [
+          "urlTemplate": "/branch/{branchId}/workspaces/{workspaceId}",
+          "idCount": 0,
+          "args": [],
+          "options": [
             {
-              "name": "workspaceId",
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "workspace-id",
               "description": "Workspace ID",
-              "required": true,
-              "type": "string"
+              "type": "string",
+              "required": true
             }
-          ],
-          "options": []
+          ]
         }
       ]
     },
@@ -1189,159 +1208,6 @@
             }
           ],
           "options": []
-        }
-      ]
-    },
-    {
-      "name": "data-app",
-      "description": "Manage Data Apps",
-      "commands": [
-        {
-          "name": "list",
-          "description": "List all Data Apps in the project",
-          "service": "data-science",
-          "atomicRef": "data-science.getApps",
-          "httpMethod": "GET",
-          "urlTemplate": "/apps",
-          "idCount": 0,
-          "args": [],
-          "options": [],
-          "table": {
-            "emptyMessage": "No Data Apps found.",
-            "columns": [
-              {
-                "key": "id",
-                "label": "ID"
-              },
-              {
-                "key": "name",
-                "label": "Name"
-              },
-              {
-                "key": "version",
-                "label": "Version"
-              },
-              {
-                "key": "status",
-                "label": "Status"
-              },
-              {
-                "key": "createdAt",
-                "label": "Created"
-              }
-            ]
-          }
-        },
-        {
-          "name": "show",
-          "description": "Show Data App details",
-          "service": "data-science",
-          "atomicRef": "data-science.getApp",
-          "httpMethod": "GET",
-          "urlTemplate": "/apps/{0}",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "appId",
-              "description": "Data App ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": []
-        },
-        {
-          "name": "create",
-          "description": "Create a new Data App",
-          "service": "data-science",
-          "atomicRef": "data-science.createApp",
-          "httpMethod": "POST",
-          "urlTemplate": "/apps",
-          "idCount": 0,
-          "args": [],
-          "options": [
-            {
-              "name": "name",
-              "description": "App name",
-              "type": "string",
-              "required": true
-            }
-          ]
-        },
-        {
-          "name": "delete",
-          "description": "Delete a Data App",
-          "service": "data-science",
-          "atomicRef": "data-science.deleteApp",
-          "httpMethod": "DELETE",
-          "urlTemplate": "/apps/{0}",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "appId",
-              "description": "Data App ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": []
-        },
-        {
-          "name": "logs",
-          "description": "Get Data App logs (tail)",
-          "service": "data-science",
-          "atomicRef": "data-science.getAppLogsTail",
-          "httpMethod": "GET",
-          "urlTemplate": "/apps/{0}/logs/tail",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "appId",
-              "description": "Data App ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": []
-        },
-        {
-          "name": "runs",
-          "description": "List Data App deployment runs",
-          "service": "data-science",
-          "atomicRef": "data-science.getAppRuns",
-          "httpMethod": "GET",
-          "urlTemplate": "/apps/{0}/runs",
-          "idCount": 1,
-          "args": [
-            {
-              "name": "appId",
-              "description": "Data App ID",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "options": [],
-          "table": {
-            "emptyMessage": "No runs found.",
-            "columns": [
-              {
-                "key": "id",
-                "label": "ID"
-              },
-              {
-                "key": "status",
-                "label": "Status"
-              },
-              {
-                "key": "createdAt",
-                "label": "Created"
-              },
-              {
-                "key": "finishedAt",
-                "label": "Finished"
-              }
-            ]
-          }
         }
       ]
     }
