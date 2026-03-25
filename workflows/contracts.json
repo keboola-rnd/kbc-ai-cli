@@ -1,9 +1,9 @@
 {
   "$schema": "./contracts-schema.json",
-  "description": "Workflow contracts — maps logical workflow commands to the atomic methods they depend on.",
+  "description": "Workflow contracts — maps logical workflow commands to the atomic methods they depend on. Includes both hand-written workflows (data-app deploy, etc.) and Layer 2 logical unit commands.",
   "workflows": {
     "data-app": {
-      "description": "Data App management workflows",
+      "description": "Data App management workflows (hand-written)",
       "commands": {
         "deploy": {
           "description": "Deploy a Data App (update config + patch app + follow logs)",
@@ -90,6 +90,206 @@
           "atomicDeps": [
             "data-science.deleteApp"
           ]
+        }
+      }
+    },
+    "unit:job": {
+      "description": "Layer 2 — Manage jobs (list, monitor)",
+      "commands": {
+        "list": {
+          "description": "List/search recent jobs",
+          "atomicDeps": ["queue.searchJobs"]
+        },
+        "show": {
+          "description": "Show job details",
+          "atomicDeps": ["queue.getJob"]
+        }
+      }
+    },
+    "unit:bucket": {
+      "description": "Layer 2 — Manage storage buckets",
+      "commands": {
+        "list": {
+          "description": "List all buckets",
+          "atomicDeps": ["storage.buckets.getBuckets"]
+        },
+        "show": {
+          "description": "Show bucket details",
+          "atomicDeps": ["storage.buckets.getBucket"]
+        },
+        "create": {
+          "description": "Create a new bucket",
+          "atomicDeps": ["storage.buckets.createBucket"]
+        },
+        "delete": {
+          "description": "Delete a bucket",
+          "atomicDeps": ["storage.buckets.deleteBucket"]
+        }
+      }
+    },
+    "unit:table": {
+      "description": "Layer 2 — Manage storage tables",
+      "commands": {
+        "list": {
+          "description": "List tables",
+          "atomicDeps": ["storage.tables.getTables"]
+        },
+        "show": {
+          "description": "Show table details",
+          "atomicDeps": ["storage.tables.getTable"]
+        },
+        "preview": {
+          "description": "Preview table data",
+          "atomicDeps": ["storage.tables.getDataPreview"]
+        }
+      }
+    },
+    "unit:flow": {
+      "description": "Layer 2 — Manage flows (orchestrations)",
+      "commands": {
+        "list": {
+          "description": "List all flows",
+          "atomicDeps": ["storage.componentsAndConfigurations.getConfigurations"]
+        },
+        "show": {
+          "description": "Show flow details",
+          "atomicDeps": ["storage.componentsAndConfigurations.getConfiguration"]
+        }
+      }
+    },
+    "unit:transformation": {
+      "description": "Layer 2 — Manage transformations",
+      "commands": {
+        "list": {
+          "description": "List all transformations",
+          "atomicDeps": ["storage.componentsAndConfigurations.getComponents"]
+        }
+      }
+    },
+    "unit:secret": {
+      "description": "Layer 2 — Manage project secrets (vault)",
+      "commands": {
+        "list": {
+          "description": "List all secrets",
+          "atomicDeps": ["vault.getVariables"]
+        },
+        "create": {
+          "description": "Create a new secret",
+          "atomicDeps": ["vault.createVariable"]
+        },
+        "delete": {
+          "description": "Delete a secret",
+          "atomicDeps": ["vault.deleteVariable"]
+        }
+      }
+    },
+    "unit:branch": {
+      "description": "Layer 2 — Manage development branches",
+      "commands": {
+        "list": {
+          "description": "List all branches",
+          "atomicDeps": ["storage.branches.getDevBranches"]
+        },
+        "create": {
+          "description": "Create a new branch",
+          "atomicDeps": ["storage.branches.createDevBranchJob"]
+        },
+        "delete": {
+          "description": "Delete a branch",
+          "atomicDeps": ["storage.branches.deleteDevBranchJob"]
+        }
+      }
+    },
+    "unit:token": {
+      "description": "Layer 2 — Manage Storage API tokens",
+      "commands": {
+        "verify": {
+          "description": "Verify current token",
+          "atomicDeps": ["storage.tokens.verify"]
+        }
+      }
+    },
+    "unit:workspace": {
+      "description": "Layer 2 — Manage workspaces",
+      "commands": {
+        "list": {
+          "description": "List all workspaces",
+          "atomicDeps": ["storage.workspaces.getWorkspaces"]
+        },
+        "show": {
+          "description": "Show workspace details",
+          "atomicDeps": ["storage.workspaces.getWorkspace"]
+        },
+        "delete": {
+          "description": "Delete a workspace",
+          "atomicDeps": ["storage.workspaces.deleteWorkspace"]
+        }
+      }
+    },
+    "unit:file": {
+      "description": "Layer 2 — Manage file uploads",
+      "commands": {
+        "list": {
+          "description": "List recent files",
+          "atomicDeps": ["storage.files.getFiles"]
+        },
+        "delete": {
+          "description": "Delete a file",
+          "atomicDeps": ["storage.files.deleteFile"]
+        }
+      }
+    },
+    "unit:config": {
+      "description": "Layer 2 — Manage component configurations",
+      "commands": {
+        "list": {
+          "description": "List configurations for a component",
+          "atomicDeps": ["storage.componentsAndConfigurations.getConfigurations"]
+        },
+        "show": {
+          "description": "Show configuration details",
+          "atomicDeps": ["storage.componentsAndConfigurations.getConfiguration"]
+        },
+        "create": {
+          "description": "Create a new configuration",
+          "atomicDeps": ["storage.componentsAndConfigurations.createConfiguration"]
+        },
+        "delete": {
+          "description": "Delete a configuration",
+          "atomicDeps": ["storage.componentsAndConfigurations.deleteConfiguration"]
+        },
+        "search": {
+          "description": "Search configurations across all components",
+          "atomicDeps": ["storage.componentsAndConfigurations.searchComponentConfigurations"]
+        }
+      }
+    },
+    "unit:data-app": {
+      "description": "Layer 2 — Manage Data Apps",
+      "commands": {
+        "list": {
+          "description": "List all Data Apps",
+          "atomicDeps": ["data-science.getApps"]
+        },
+        "show": {
+          "description": "Show Data App details",
+          "atomicDeps": ["data-science.getApp"]
+        },
+        "create": {
+          "description": "Create a new Data App",
+          "atomicDeps": ["data-science.createApp"]
+        },
+        "delete": {
+          "description": "Delete a Data App",
+          "atomicDeps": ["data-science.deleteApp"]
+        },
+        "logs": {
+          "description": "Get Data App logs (tail)",
+          "atomicDeps": ["data-science.getAppLogsTail"]
+        },
+        "runs": {
+          "description": "List Data App deployment runs",
+          "atomicDeps": ["data-science.getAppRuns"]
         }
       }
     }

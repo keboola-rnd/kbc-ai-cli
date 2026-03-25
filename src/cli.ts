@@ -11,6 +11,7 @@ import { registerSecretsCommands } from './commands/secrets/index';
 import { registerRunsCommands } from './commands/runs/index';
 import { registerApiCommands } from './commands/api/index';
 import { registerAllGeneratedCommands } from './generated/index';
+import { registerAllLogicalUnits } from './generated/units/index';
 
 const program = new Command();
 
@@ -34,6 +35,7 @@ registerApiCommands(program);
 try {
   const ctx = CliContext.fromEnvOrConfig();
   registerAllGeneratedCommands(program, ctx);
+  registerAllLogicalUnits(program, ctx);
 } catch {
   // Auth not configured yet — generated commands will not be available
   // This is expected when running `kbc auth login` for the first time
