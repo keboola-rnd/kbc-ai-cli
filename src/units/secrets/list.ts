@@ -21,7 +21,7 @@ export function registerSecretsList(parent: Command): void {
         const resolvedAppId = ctx.resolveAppId(appId);
 
         const app = await ctx.getApp(resolvedAppId);
-        const config = await ctx.getConfiguration(app.configId);
+        const config = await ctx.getConfigurationLegacy(app.configId);
         const secrets = config.configuration?.parameters?.dataApp?.secrets ?? {};
 
         const entries = Object.entries(secrets);

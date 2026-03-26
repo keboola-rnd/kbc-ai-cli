@@ -1,28 +1,32 @@
 #!/usr/bin/env bun
 import { Command } from 'commander';
 import { APP_NAME, APP_VERSION } from './constants';
-import { registerAuth } from './commands/auth';
-import { registerUse } from './commands/use';
-import { registerAppCommands } from './commands/app/index';
-import { registerConfigCommands } from './commands/config/index';
-import { registerSecretsCommands } from './commands/secrets/index';
-import { registerRunsCommands } from './commands/runs/index';
-import { registerApiCommands } from './commands/api/index';
+import { CliContext } from './context';
+import { registerAllUnits } from './units/index';
+import { registerAllGeneratedCommands } from './generated/index';
 
 const program = new Command();
 
 program
   .name(APP_NAME)
   .version(APP_VERSION)
-  .description('Keboola Data App CLI — manage Data Apps from the terminal');
+  .description('Keboola CLI — complete CLI over the entire Keboola API');
 
-// Register all command groups
-registerAuth(program);
-registerUse(program);
-registerAppCommands(program);
-registerConfigCommands(program);
-registerSecretsCommands(program);
-registerRunsCommands(program);
-registerApiCommands(program);
+// All commands require auth context except hand-written ones (auth, use, etc.)
+// Create context lazily so auth/use commands work without credentials
+try {
+  const ctx = CliContext.fromEnvOrConfig();
+  registerAllUnits(program, ctx);
+  registerAllGeneratedCommands(program, ctx);
+} catch (err: unknown) {
+  // Auth not configured yet — register hand-written units only (no ctx).
+  // Generated commands and logical units will not be available.
+  const msg = err instanceof Error ? err.message : String(err);
+  if (!msg.includes('Not authenticated') && !msg.includes('KBC_STORAGE_TOKEN') && !msg.includes('KBC_STORAGE_URL') && !msg.includes('not configured')) {
+    throw err;
+  }
+  // Still register hand-written units (they don't need auth)
+  registerAllUnits(program);
+}
 
 program.parse(process.argv);

@@ -1,0 +1,1226 @@
+{
+  "$comment": "Layer 2 logical units — declarative definitions for high-level CLI commands. Each unit groups related operations with table formatting, smart defaults, and domain-specific help. The generator reads this file and produces src/units/*.ts files + SKILL.md. atomicRef fields are validated against api-registry to ensure contract integrity.",
+  "units": [
+    {
+      "name": "component",
+      "description": "Manage components, configurations, and configuration rows",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all components in the project",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getComponents",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "type",
+              "description": "Filter by component type (extractor, writer, transformation, application)",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No components found.",
+            "flatten": "configurations",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 50
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show component details (schema, documentation)",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getComponent",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID (e.g. keboola.ex-db-mysql)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "configs",
+          "description": "List configurations for a component",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfigurations",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No configurations found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 60
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "config-show",
+          "description": "Show configuration details",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfiguration",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-create",
+          "description": "Create a new configuration",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.createConfiguration",
+          "httpMethod": "POST",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "name",
+              "description": "Configuration name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "description",
+              "description": "Configuration description",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "description": "Configuration JSON data",
+              "type": "string"
+            },
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-delete",
+          "description": "Delete a configuration",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.deleteConfiguration",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "config-search",
+          "description": "Search configurations across all components",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.searchComponentConfigurations",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/search/component-configurations",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "component-id",
+              "description": "Filter by component ID",
+              "type": "string"
+            },
+            {
+              "name": "config-id",
+              "description": "Filter by config ID",
+              "type": "string"
+            },
+            {
+              "name": "query",
+              "description": "Search query",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No configurations found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 50
+              },
+              {
+                "key": "componentId",
+                "label": "Component"
+              }
+            ]
+          }
+        },
+        {
+          "name": "row-create",
+          "description": "Create a configuration row",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.createConfigurationRow",
+          "httpMethod": "POST",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}/rows",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "data",
+              "description": "Row data as JSON",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ]
+        },
+        {
+          "name": "row-delete",
+          "description": "Delete a configuration row",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.deleteConfigurationRow",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}/rows/{2}",
+          "idCount": 3,
+          "args": [
+            {
+              "name": "componentId",
+              "description": "Component ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "configId",
+              "description": "Configuration ID",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "rowId",
+              "description": "Row ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            },
+            {
+              "name": "change-description",
+              "description": "Change description",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "skillDescription": "Use when working with Keboola components (extractors, writers, transformations, applications). Typical workflow: list components → pick one → list configs → show/create config → manage rows. Components are the building blocks of Keboola pipelines — each has configurations that define how it runs."
+    },
+    {
+      "name": "job",
+      "description": "Manage jobs (run, list, monitor)",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List recent jobs",
+          "service": "queue",
+          "atomicRef": "queue.searchJobs",
+          "httpMethod": "GET",
+          "urlTemplate": "/search/jobs",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "status",
+              "description": "Filter by status (created, waiting, processing, success, error, cancelled, terminated, warning)",
+              "type": "string"
+            },
+            {
+              "name": "component",
+              "description": "Filter by component ID",
+              "type": "string"
+            },
+            {
+              "name": "config",
+              "description": "Filter by configuration ID",
+              "type": "string"
+            },
+            {
+              "name": "limit",
+              "description": "Max number of results",
+              "type": "string",
+              "defaultValue": "50"
+            },
+            {
+              "name": "offset",
+              "description": "Skip first N results",
+              "type": "string"
+            },
+            {
+              "name": "sort-by",
+              "description": "Sort field (id, startTime, endTime, durationSeconds)",
+              "type": "string",
+              "defaultValue": "id"
+            },
+            {
+              "name": "sort-order",
+              "description": "Sort order (asc, desc)",
+              "type": "string",
+              "defaultValue": "desc"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No jobs found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "status",
+                "label": "Status"
+              },
+              {
+                "key": "component",
+                "label": "Component"
+              },
+              {
+                "key": "config",
+                "label": "Config"
+              },
+              {
+                "key": "startTime",
+                "label": "Started"
+              },
+              {
+                "key": "endTime",
+                "label": "Ended"
+              },
+              {
+                "key": "durationSeconds",
+                "label": "Duration(s)"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show job details (status, results, metrics)",
+          "service": "queue",
+          "atomicRef": "queue.getJob",
+          "httpMethod": "GET",
+          "urlTemplate": "/jobs/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "jobId",
+              "description": "Job ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        }
+      ],
+      "skillDescription": "Use when checking pipeline execution status. Typical workflow: list recent jobs (optionally filter by status/component) → show job details for debugging. Jobs represent individual runs of components or flows."
+    },
+    {
+      "name": "bucket",
+      "description": "Manage storage buckets",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all buckets in the project",
+          "service": "storage",
+          "subGroup": "buckets",
+          "atomicRef": "storage.buckets.getBuckets",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/default/buckets",
+          "idCount": 0,
+          "args": [],
+          "options": [],
+          "table": {
+            "emptyMessage": "No buckets found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "stage",
+                "label": "Stage"
+              },
+              {
+                "key": "backend",
+                "label": "Backend"
+              },
+              {
+                "key": "rowsCount",
+                "label": "Rows"
+              },
+              {
+                "key": "dataSizeBytes",
+                "label": "Size(B)"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show bucket details",
+          "service": "storage",
+          "subGroup": "buckets",
+          "atomicRef": "storage.buckets.getBucket",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/default/buckets/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "bucketId",
+              "description": "Bucket ID (e.g. in.c-main)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "create",
+          "description": "Create a new bucket",
+          "service": "storage",
+          "subGroup": "buckets",
+          "atomicRef": "storage.buckets.createBucket",
+          "httpMethod": "POST",
+          "urlTemplate": "/branch/default/buckets",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "name",
+              "description": "Bucket name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "stage",
+              "description": "Bucket stage (in, out)",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "backend",
+              "description": "Storage backend (snowflake, bigquery, etc.)",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "description": "Bucket description",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "description": "Delete a bucket",
+          "service": "storage",
+          "subGroup": "buckets",
+          "atomicRef": "storage.buckets.deleteBucket",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/default/buckets/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "bucketId",
+              "description": "Bucket ID (e.g. in.c-main)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "force",
+              "description": "Force delete (including all tables)",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "skillDescription": "Use when managing storage organization. Typical workflow: list buckets → create bucket (in/out stage) → manage tables inside. Buckets are top-level containers in Keboola Storage that group related tables."
+    },
+    {
+      "name": "table",
+      "description": "Manage storage tables",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List tables in a bucket",
+          "service": "storage",
+          "subGroup": "tables",
+          "atomicRef": "storage.tables.getTables",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/default/tables",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "bucket",
+              "description": "Filter by bucket ID",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No tables found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "primaryKey",
+                "label": "Primary Key"
+              },
+              {
+                "key": "rowsCount",
+                "label": "Rows"
+              },
+              {
+                "key": "dataSizeBytes",
+                "label": "Size(B)"
+              },
+              {
+                "key": "lastImportDate",
+                "label": "Last Import"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show table details (columns, metadata)",
+          "service": "storage",
+          "subGroup": "tables",
+          "atomicRef": "storage.tables.getTable",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/default/tables/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "tableId",
+              "description": "Table ID (e.g. in.c-main.customers)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "preview",
+          "description": "Preview table data",
+          "service": "storage",
+          "subGroup": "tables",
+          "atomicRef": "storage.tables.getDataPreview",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/default/tables/{0}/data-preview",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "tableId",
+              "description": "Table ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "limit",
+              "description": "Max rows",
+              "type": "string",
+              "defaultValue": "100"
+            },
+            {
+              "name": "format",
+              "description": "Output format (json)",
+              "type": "string",
+              "defaultValue": "json"
+            }
+          ]
+        }
+      ],
+      "skillDescription": "Use when working with data stored in Keboola Storage. Typical workflow: list tables (optionally filter by bucket) → show table details (columns, metadata) → preview data. Tables hold the actual data rows inside buckets."
+    },
+    {
+      "name": "flow",
+      "description": "Manage flows (orchestrations)",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all flows in the project",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfigurations",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs",
+          "idCount": 1,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "hardcodedArgs": {
+            "0": "keboola.orchestrator"
+          },
+          "table": {
+            "emptyMessage": "No flows found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 60
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show flow details (phases, tasks, schedule)",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getConfiguration",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components/{0}/configs/{1}",
+          "idCount": 2,
+          "args": [
+            {
+              "name": "flowId",
+              "description": "Flow configuration ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "hardcodedArgs": {
+            "0": "keboola.orchestrator"
+          },
+          "argMapping": {
+            "flowId": 1
+          }
+        }
+      ],
+      "skillDescription": "Use when managing orchestrations/pipelines. Typical workflow: list flows → show flow details. Flows (formerly orchestrations) define multi-step pipelines that run components in sequence or parallel."
+    },
+    {
+      "name": "transformation",
+      "description": "Manage transformations (SQL, Python, R)",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all transformations in the project",
+          "service": "storage",
+          "subGroup": "componentsAndConfigurations",
+          "atomicRef": "storage.componentsAndConfigurations.getComponents",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/components",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "queryDefaults": {
+            "componentType": "transformation"
+          },
+          "table": {
+            "emptyMessage": "No transformations found.",
+            "flatten": "configurations",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "description",
+                "label": "Description",
+                "maxWidth": 50
+              },
+              {
+                "key": "version",
+                "label": "Version"
+              }
+            ]
+          }
+        }
+      ],
+      "skillDescription": "Use when working with data transformations (SQL, Python, R). Typical workflow: list transformations → show details. Transformations are a special component type that process data using code."
+    },
+    {
+      "name": "secret",
+      "description": "Manage project secrets (vault)",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all secrets in the project",
+          "service": "vault",
+          "atomicRef": "vault.getVariables",
+          "httpMethod": "GET",
+          "urlTemplate": "/variables",
+          "idCount": 0,
+          "args": [],
+          "options": [],
+          "table": {
+            "emptyMessage": "No secrets found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "key",
+                "label": "Key"
+              },
+              {
+                "key": "hash",
+                "label": "Hash"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "create",
+          "description": "Create a new secret",
+          "service": "vault",
+          "atomicRef": "vault.createVariable",
+          "httpMethod": "POST",
+          "urlTemplate": "/variables",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "key",
+              "description": "Secret key name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "value",
+              "description": "Secret value",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "description": "Delete a secret",
+          "service": "vault",
+          "atomicRef": "vault.deleteVariable",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/variables/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "secretId",
+              "description": "Secret ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        }
+      ],
+      "skillDescription": "Use when managing project-level secrets stored in Keboola Vault. Typical workflow: list secrets → create/delete secrets. Secrets are encrypted key-value pairs available to components at runtime."
+    },
+    {
+      "name": "branch",
+      "description": "Manage development branches",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all branches",
+          "service": "storage",
+          "subGroup": "branches",
+          "atomicRef": "storage.branches.getDevBranches",
+          "httpMethod": "GET",
+          "urlTemplate": "/dev-branches",
+          "idCount": 0,
+          "args": [],
+          "options": [],
+          "table": {
+            "emptyMessage": "No branches found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "isDefault",
+                "label": "Default"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "create",
+          "description": "Create a new development branch",
+          "service": "storage",
+          "subGroup": "branches",
+          "atomicRef": "storage.branches.createDevBranchJob",
+          "httpMethod": "POST",
+          "urlTemplate": "/dev-branches",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "name",
+              "description": "Branch name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "description",
+              "description": "Branch description",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "description": "Delete a development branch",
+          "service": "storage",
+          "subGroup": "branches",
+          "atomicRef": "storage.branches.deleteDevBranchJob",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/dev-branches/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "branchId",
+              "description": "Branch ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        }
+      ],
+      "skillDescription": "Use when working with development branches. Typical workflow: list branches → create branch → work in isolation → merge. Branches allow isolated development without affecting production data."
+    },
+    {
+      "name": "token",
+      "description": "Manage Storage API tokens",
+      "commands": [
+        {
+          "name": "verify",
+          "description": "Verify current token and show project info",
+          "service": "storage",
+          "subGroup": "tokens",
+          "atomicRef": "storage.tokens.verify",
+          "httpMethod": "GET",
+          "urlTemplate": "/tokens/verify",
+          "idCount": 0,
+          "args": [],
+          "options": []
+        }
+      ],
+      "skillDescription": "Use when managing Storage API tokens and permissions. Typical workflow: list tokens to see who has access. Tokens control authentication and authorization for API access."
+    },
+    {
+      "name": "workspace",
+      "description": "Manage workspaces (sandboxes)",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List all workspaces",
+          "service": "storage",
+          "subGroup": "workspaces",
+          "atomicRef": "storage.workspaces.getWorkspaces",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/workspaces",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "defaultValue": "default"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No workspaces found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "type",
+                "label": "Type"
+              },
+              {
+                "key": "size",
+                "label": "Size"
+              },
+              {
+                "key": "active",
+                "label": "Active"
+              },
+              {
+                "key": "user",
+                "label": "User"
+              },
+              {
+                "key": "createdTimestamp",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "description": "Show workspace details",
+          "service": "storage",
+          "subGroup": "workspaces",
+          "atomicRef": "storage.workspaces.getWorkspace",
+          "httpMethod": "GET",
+          "urlTemplate": "/branch/{branchId}/workspaces/{workspaceId}",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "workspace-id",
+              "description": "Workspace ID",
+              "type": "string",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "description": "Delete a workspace",
+          "service": "storage",
+          "subGroup": "workspaces",
+          "atomicRef": "storage.workspaces.deleteWorkspace",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/branch/{branchId}/workspaces/{workspaceId}",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "branch-id",
+              "description": "Branch ID",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "workspace-id",
+              "description": "Workspace ID",
+              "type": "string",
+              "required": true
+            }
+          ]
+        }
+      ],
+      "skillDescription": "Use when managing interactive workspaces (sandboxes). Typical workflow: list workspaces → create workspace → use for development. Workspaces provide interactive environments (Jupyter, RStudio, etc.) connected to project data."
+    },
+    {
+      "name": "file",
+      "description": "Manage file uploads",
+      "commands": [
+        {
+          "name": "list",
+          "description": "List recent file uploads",
+          "service": "storage",
+          "subGroup": "files",
+          "atomicRef": "storage.files.getFiles",
+          "httpMethod": "GET",
+          "urlTemplate": "/files",
+          "idCount": 0,
+          "args": [],
+          "options": [
+            {
+              "name": "limit",
+              "description": "Max number of results",
+              "type": "string",
+              "defaultValue": "50"
+            },
+            {
+              "name": "tags",
+              "description": "Filter by tags (comma-separated)",
+              "type": "string"
+            }
+          ],
+          "table": {
+            "emptyMessage": "No files found.",
+            "columns": [
+              {
+                "key": "id",
+                "label": "ID"
+              },
+              {
+                "key": "name",
+                "label": "Name"
+              },
+              {
+                "key": "sizeBytes",
+                "label": "Size(B)"
+              },
+              {
+                "key": "isPublic",
+                "label": "Public"
+              },
+              {
+                "key": "tags",
+                "label": "Tags"
+              },
+              {
+                "key": "created",
+                "label": "Created"
+              }
+            ]
+          }
+        },
+        {
+          "name": "delete",
+          "description": "Delete a file",
+          "service": "storage",
+          "subGroup": "files",
+          "atomicRef": "storage.files.deleteFile",
+          "httpMethod": "DELETE",
+          "urlTemplate": "/files/{0}",
+          "idCount": 1,
+          "args": [
+            {
+              "name": "fileId",
+              "description": "File ID",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "options": []
+        }
+      ],
+      "skillDescription": "Use when managing file uploads in Keboola Storage. Typical workflow: list files → show file details. Files are used for importing/exporting data and storing artifacts."
+    }
+  ]
+}

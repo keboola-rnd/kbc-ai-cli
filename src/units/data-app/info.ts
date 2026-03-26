@@ -20,7 +20,7 @@ export function registerAppInfo(parent: Command): void {
         let config = null;
         if (app.configId) {
           try {
-            config = await ctx.getConfiguration(app.configId);
+            config = await ctx.getConfigurationLegacy(app.configId);
           } catch {
             // Config might not be accessible
           }

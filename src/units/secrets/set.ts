@@ -35,7 +35,7 @@ export function registerSecretsSet(parent: Command): void {
         }
 
         const app = await ctx.getApp(resolvedAppId);
-        const config = await ctx.getConfiguration(app.configId);
+        const config = await ctx.getConfigurationLegacy(app.configId);
         const currentConfig = config.configuration ?? {};
         const currentParams = currentConfig.parameters ?? {};
         const currentDataApp = currentParams.dataApp ?? {};
@@ -47,7 +47,7 @@ export function registerSecretsSet(parent: Command): void {
 
         for (const [key, value] of Object.entries(newSecrets)) {
           if (opts.encrypt) {
-            const encrypted = await ctx.encrypt(value, {
+            const encrypted = await ctx.encryptLegacy(value, {
               projectId: String(tokenInfo.owner.id),
               componentId: 'keboola.data-apps',
             });

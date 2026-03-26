@@ -24,7 +24,7 @@ export function registerConfigGit(parent: Command): void {
         const ctx = CliContext.fromEnvOrConfig(opts);
         const resolvedAppId = ctx.resolveAppId(appId);
         const app = await ctx.getApp(resolvedAppId);
-        const config = await ctx.getConfiguration(app.configId);
+        const config = await ctx.getConfigurationLegacy(app.configId);
 
         const isReadOnly = !opts.repo && !opts.branch && !opts.entrypoint;
 
