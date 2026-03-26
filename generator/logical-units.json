@@ -1,5 +1,5 @@
 {
-  "$comment": "Layer 2 logical units \u2014 declarative definitions for high-level CLI commands. Each unit groups related operations with table formatting, smart defaults, and domain-specific help. The generator reads this file and produces src/generated/units/*.ts files. atomicRef fields are validated against api-registry to ensure contract integrity.",
+  "$comment": "Layer 2 logical units — declarative definitions for high-level CLI commands. Each unit groups related operations with table formatting, smart defaults, and domain-specific help. The generator reads this file and produces src/units/*.ts files + SKILL.md. atomicRef fields are validated against api-registry to ensure contract integrity.",
   "units": [
     {
       "name": "component",
@@ -373,7 +373,8 @@
             }
           ]
         }
-      ]
+      ],
+      "skillDescription": "Use when working with Keboola components (extractors, writers, transformations, applications). Typical workflow: list components → pick one → list configs → show/create config → manage rows. Components are the building blocks of Keboola pipelines — each has configurations that define how it runs."
     },
     {
       "name": "job",
@@ -480,7 +481,8 @@
           ],
           "options": []
         }
-      ]
+      ],
+      "skillDescription": "Use when checking pipeline execution status. Typical workflow: list recent jobs (optionally filter by status/component) → show job details for debugging. Jobs represent individual runs of components or flows."
     },
     {
       "name": "bucket",
@@ -606,7 +608,8 @@
             }
           ]
         }
-      ]
+      ],
+      "skillDescription": "Use when managing storage organization. Typical workflow: list buckets → create bucket (in/out stage) → manage tables inside. Buckets are top-level containers in Keboola Storage that group related tables."
     },
     {
       "name": "table",
@@ -710,7 +713,8 @@
             }
           ]
         }
-      ]
+      ],
+      "skillDescription": "Use when working with data stored in Keboola Storage. Typical workflow: list tables (optionally filter by bucket) → show table details (columns, metadata) → preview data. Tables hold the actual data rows inside buckets."
     },
     {
       "name": "flow",
@@ -796,7 +800,8 @@
             "flowId": 1
           }
         }
-      ]
+      ],
+      "skillDescription": "Use when managing orchestrations/pipelines. Typical workflow: list flows → show flow details. Flows (formerly orchestrations) define multi-step pipelines that run components in sequence or parallel."
     },
     {
       "name": "transformation",
@@ -847,7 +852,8 @@
             ]
           }
         }
-      ]
+      ],
+      "skillDescription": "Use when working with data transformations (SQL, Python, R). Typical workflow: list transformations → show details. Transformations are a special component type that process data using code."
     },
     {
       "name": "secret",
@@ -927,7 +933,8 @@
           ],
           "options": []
         }
-      ]
+      ],
+      "skillDescription": "Use when managing project-level secrets stored in Keboola Vault. Typical workflow: list secrets → create/delete secrets. Secrets are encrypted key-value pairs available to components at runtime."
     },
     {
       "name": "branch",
@@ -1009,7 +1016,8 @@
           ],
           "options": []
         }
-      ]
+      ],
+      "skillDescription": "Use when working with development branches. Typical workflow: list branches → create branch → work in isolation → merge. Branches allow isolated development without affecting production data."
     },
     {
       "name": "token",
@@ -1027,7 +1035,8 @@
           "args": [],
           "options": []
         }
-      ]
+      ],
+      "skillDescription": "Use when managing Storage API tokens and permissions. Typical workflow: list tokens to see who has access. Tokens control authentication and authorization for API access."
     },
     {
       "name": "workspace",
@@ -1131,7 +1140,8 @@
             }
           ]
         }
-      ]
+      ],
+      "skillDescription": "Use when managing interactive workspaces (sandboxes). Typical workflow: list workspaces → create workspace → use for development. Workspaces provide interactive environments (Jupyter, RStudio, etc.) connected to project data."
     },
     {
       "name": "file",
@@ -1209,7 +1219,8 @@
           ],
           "options": []
         }
-      ]
+      ],
+      "skillDescription": "Use when managing file uploads in Keboola Storage. Typical workflow: list files → show file details. Files are used for importing/exporting data and storing artifacts."
     }
   ]
 }

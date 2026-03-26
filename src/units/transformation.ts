@@ -2,8 +2,8 @@
 // Re-generate with: make generate
 
 import { Command } from 'commander';
-import type { CliContext } from '../../context';
-import { formatTable } from '../../output';
+import type { CliContext } from '../context';
+import { formatTable } from '../output';
 
 export function registerTransformationUnit(parent: Command, ctx: CliContext) {
   const unit = parent.command('transformation').description('Manage transformations (SQL, Python, R)');

@@ -2,8 +2,8 @@
 // Re-generate with: make generate
 
 import { Command } from 'commander';
-import type { CliContext } from '../../context';
-import { formatTable } from '../../output';
+import type { CliContext } from '../context';
+import { formatTable } from '../output';
 
 export function registerBranchUnit(parent: Command, ctx: CliContext) {
   const unit = parent.command('branch').description('Manage development branches');

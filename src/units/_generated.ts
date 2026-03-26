@@ -2,7 +2,7 @@
 // Re-generate with: make generate
 
 import { Command } from 'commander';
-import type { CliContext } from '../../context';
+import type { CliContext } from '../context';
 
 import { registerComponentUnit } from './component';
 import { registerJobUnit } from './job';
