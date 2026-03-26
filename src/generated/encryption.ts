@@ -34,7 +34,13 @@ export function registerEncryptionCommands(parent: Command, ctx: CliContext) {
       try {
         const api: any = await ctx.encryptionApi();
         const bodyData = opts.data ? JSON.parse(opts.data) : {};
-        const result = await api._call('encryptSecrets', 'POST', '/encrypt', 0, { ...bodyData, projectId: opts['projectId'], componentId: opts['componentId'], branchType: opts['branchType'] });
+        const __qp = new URLSearchParams();
+        if (opts['projectId'] !== undefined) __qp.set('projectId', String(opts['projectId']));
+        if (opts['componentId'] !== undefined) __qp.set('componentId', String(opts['componentId']));
+        if (opts['branchType'] !== undefined) __qp.set('branchType', String(opts['branchType']));
+        const __qs = __qp.toString();
+        const __url = __qs ? '/encrypt?' + __qs : '/encrypt';
+        const result = await api._call('encryptSecrets', 'POST', __url, 0, bodyData);
         ctx.output(result);
       } catch (error: unknown) {
         ctx.handleError(error);

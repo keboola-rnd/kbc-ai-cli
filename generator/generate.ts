@@ -255,7 +255,8 @@ function buildCallArgs(method: MethodDef): { preamble: string; callArgs: string 
     const cn = kebabToCamel(a.name);
     return a.type === 'number' ? `${cn}: Number(${a.name})` : `${cn}: ${a.name}`;
   });
-  const nonDataOpts = method.options.filter((o) => o.name !== 'data');
+  const qpSet = new Set((method.queryParams ?? []).map(kebabToCamel));
+  const nonDataOpts = method.options.filter((o) => o.name !== 'data' && !qpSet.has(kebabToCamel(o.name)));
   const optEntries = nonDataOpts.map((o) => {
     const cn = kebabToCamel(o.name);
     return o.type === 'number'
@@ -335,6 +336,16 @@ function generateCommand(
     });
     const queryObj = queryOpts.length > 0 ? `{ ${queryOpts.join(', ')} }` : 'undefined';
     lines.push(`        const result = await api._callText('${method.name}', '${httpMethod}', '${urlTemplate}', ${textArgName}, ${queryObj});`);
+  } else if (method.queryParams && method.queryParams.length > 0) {
+    // Methods with both JSON body and query params (e.g. encryptSecrets)
+    const qpCamel = method.queryParams.map(kebabToCamel);
+    lines.push(`        const __qp = new URLSearchParams();`);
+    for (const cn of qpCamel) {
+      lines.push(`        if (opts['${cn}'] !== undefined) __qp.set('${cn}', String(opts['${cn}']));`);
+    }
+    lines.push(`        const __qs = __qp.toString();`);
+    lines.push(`        const __url = __qs ? '${urlTemplate}?' + __qs : '${urlTemplate}';`);
+    lines.push(`        const result = await api._call('${method.name}', '${httpMethod}', __url, ${idCount}${callArgStr});`);
   } else {
     lines.push(`        const result = await api._call('${method.name}', '${httpMethod}', '${urlTemplate}', ${idCount}${callArgStr});`);
   }

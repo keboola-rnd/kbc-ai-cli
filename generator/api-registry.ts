@@ -47,6 +47,10 @@ export type MethodDef = {
    *  and remaining options are sent as query params instead of JSON body.
    *  The value names the arg field that holds the text body. */
   textBody?: string;
+  /** Option names that should always be sent as URL query params (not in JSON body).
+   *  Useful for POST endpoints where some options are scoping params (e.g. projectId)
+   *  while the body carries the actual data payload. */
+  queryParams?: string[];
 };
 
 export type SubGroupDef = {
@@ -1320,6 +1324,7 @@ const encryption: ServiceDef = {
         { name: 'component-id', description: 'Component ID', type: 'string' },
         { name: 'branch-type', description: 'Branch type', type: 'string' },
       ],
+      queryParams: ['project-id', 'component-id', 'branch-type'],
     },
   ],
   subGroups: [],

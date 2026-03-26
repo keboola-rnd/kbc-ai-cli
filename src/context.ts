@@ -61,7 +61,9 @@ function createServiceProxy(
   subGroupNames?: string[],
 ): Record<string, unknown> {
   return new Proxy({} as Record<string, unknown>, {
-    get(_target, prop: string) {
+    get(_target, prop: string | symbol) {
+      // Guard against Symbol property access (e.g. Symbol.toPrimitive, Symbol.iterator)
+      if (typeof prop === 'symbol') return undefined;
       // Prevent the proxy from being treated as a thenable when awaited.
       // Without this, `await ctx.dataScienceApi()` would hang forever because
       // JS checks `proxy.then` and our catch-all handler returns a function.
